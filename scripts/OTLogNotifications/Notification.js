@@ -33,6 +33,7 @@ async function notification(){
               if (error) {
                   return;
               }else{
+                console.log(obj.header+' was triggered.');
                 client.sendMessage(chatId, header + stdout , {
                   disableWebPagePreview: true,
                   disableNotification: false,
