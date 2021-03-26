@@ -199,7 +199,7 @@ try{
             var scripts_status = await exec(script_check);
             var scripts_status = scripts_status.stdout
 
-            var n = scripts_status.includes("crontab")
+            var n = scripts_status.includes("notification")
             var n = n.toString();
 
             if (n == 'true'){
@@ -227,9 +227,9 @@ try{
             if(aws_backup == 'true'){
               console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[32m', "             [Enabled]");
             }else{
-              console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[31m', "             [Disabled]",'\n');
+              console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[31m', "             [Disabled]");
             }
-
+            console.log(" ");
             console.log('\x1b[35m', "[1] - Start maintenance scripts");
             console.log('\x1b[35m', "[2] - Stop maintenance scripts");
             console.log('\x1b[35m', "[3] - Restart maintenance scripts",'\n');
