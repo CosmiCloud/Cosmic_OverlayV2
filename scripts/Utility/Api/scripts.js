@@ -22,8 +22,6 @@ module.exports={
         var chain_count = Number(chain_count);
         console.log(" ")
         console.log("\x1b[35m  Graph Size:     \x1b[35mNumber of Edges: \x1b[32m"+info.graph_size.number_of_edges+"      \x1b[35mNumber of Vertices: \x1b[32m"+info.graph_size.number_of_vertices)
-        // console.log("\x1b[35mNumber of Edges: \x1b[32m"+info.graph_size.number_of_edges+"      \x1b[35mNumber of Vertices: \x1b[32m"+info.graph_size.number_of_vertices)
-        // console.log("\x1b[35mNumber of Vertices: \x1b[32m"+info.graph_size.number_of_vertices)
         console.log("_________________________________________________________________________")
         console.log(" ")
         console.log("\x1b[34m  Active Staking IDs for Node "+info.network.identity)

@@ -10,6 +10,10 @@ const awsbucket = config.scripts.aws_bucket_name;
 const awsaccesskeyid = config.scripts.aws_access_key_id;
 const awssecretaccesskey = config.scripts.aws_secret_access_key;
 
+const fs = require('fs');
+const dateFormat = require('dateformat');
+var date = dateFormat(new Date(), "yyyy-mm-dd-h:MM:ss");
+
 const client = new TelegramClient({
   accessToken: token,
 });
@@ -25,13 +29,16 @@ client.getWebhookInfo().catch((error) => {
 var upload = 'sudo docker exec otnode node scripts/backup-upload-aws.js --config=/ot-node/.origintrail_noderc --configDir=/ot-node/data --backupDirectory=/ot-node/backup --AWSAccessKeyId='+awsaccesskeyid +' --AWSSecretAccessKey='+awssecretaccesskey+' --AWSBucketName=' + awsbucket
 
   try{
+    console.log(date+' - scripts/upload.js: Attempting AWS upload...');
     exec(upload, (error, upload, stderr) => {
       if (error){
+        console.log(date+' - scripts/upload.js: Failed to trigger AWS upload.');
         client.sendMessage(chatId, node_name+ ' system update failed: '+error, {
           disableWebPagePreview: true,
           disableNotification: false,
         });
       }else{
+        console.log(date+' - scripts/upload.js: AWS upload has successfully triggered.');
         client.sendMessage(chatId, node_name+ ' AWS backup script triggered. If your configuration was correct, you can check AWS S3 to find your backup.', {
           disableWebPagePreview: true,
           disableNotification: false,
@@ -39,6 +46,7 @@ var upload = 'sudo docker exec otnode node scripts/backup-upload-aws.js --config
       }
     });
   }catch(e){
+    console.log(date+e);
     client.sendMessage(chatId, node_name+ ' AWS script failed to trigger: '+e, {
       disableWebPagePreview: true,
       disableNotification: false,

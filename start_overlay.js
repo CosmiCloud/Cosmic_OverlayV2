@@ -22,6 +22,7 @@ var heartbeat = overlay_config.scripts.heartbeat.enabled;
 var log_not = overlay_config.scripts.log_notifications.enabled;
 var log_arch = overlay_config.scripts.log_archiving.enabled;
 var aws_backup = overlay_config.scripts.aws_backup.enabled;
+var report = overlay_config.scripts.report.enabled;
 
 try{
   (async () => {
@@ -228,6 +229,11 @@ try{
               console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[32m', "             [Enabled]");
             }else{
               console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[31m', "             [Disabled]");
+            }
+            if(report == 'true'){
+              console.log('\x1b[35m', "Daily Reports: ",'\x1b[32m', "                     [Enabled]");
+            }else{
+              console.log('\x1b[35m', "Daily Reports: ",'\x1b[31m', "                     [Disabled]");
             }
             console.log(" ");
             console.log('\x1b[35m', "[1] - Start maintenance scripts");

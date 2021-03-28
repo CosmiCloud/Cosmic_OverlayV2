@@ -113,6 +113,11 @@
           "enabled" : "true",
           "telegram_bot_token" : "*telegram bot token here*",
           "frequency" : "* * * * *"
+        },
+        "report":{
+          "enabled" : "true",
+          "telegram_bot_token" : "*telegram bot token here*",
+          "frequency" : "0 8 * * *"
         }
       }
   }
