@@ -43,12 +43,13 @@ async function ping(){
     }
 
     console.log(date+' - scripts/ping.js: Checking CPU usage...');
-    var checkcpu = "echo $[100-$(vmstat 1 2|tail -1|awk '{print $15}')]"
+    var checkcpu = "echo $(vmstat 1 2|tail -1|awk '{print $15}')"
     var checkcpu = await exec(checkcpu);
-    var usage = checkcpu.stdout
-    var usage = Number(usage);
+    var cpuusage = checkcpu.stdout
+    var cpuusage = Number(cpuusage);
+    var cpuusage = 100 - cpuusage
 
-    if(usage > 80){
+    if(cpuusage > 80){
       console.log(date+' - scripts/ping.js: CPU usage is high:'+usage+'%');
       await client.sendMessage(chatId, '!!WARNING!! - '+node_name+ ' CPU usage is '+ usage+'%.', {
         disableWebPagePreview: true,
