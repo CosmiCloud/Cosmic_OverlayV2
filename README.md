@@ -82,7 +82,7 @@ Create an https://aws.amazon.com/s3/ account and create a new api access key and
 <li>Run: cd ..</li>
 </ol>
 <br>
-You can run sudo forever list to view the running porcess that automate the scripts. Sudo nano into the respective log file to find time stamped logs of script processes or errors if your scripts are not working.
+You can run sudo forever list to view the running porcess that automate the scripts. Sudo nano into the respective log file to find time stamped logs of script processes or errors if your scripts are not working.<br>
 <b>----------------------------------------------------------------Features:------------------------------------------------------------------</b><br><br>
 <a href="https://ibb.co/p29syCD"><img src="https://i.ibb.co/rk1LsnP/IMG-20210325-090642-421.jpg" alt="IMG-20210325-090642-421" border="0"/></a><br><br>
 <b>Install Menu:</b>
