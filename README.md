@@ -142,3 +142,4 @@ Place the following in your crontab and make sure the path to the scripts are co
 0 0 1 * * root cd /path/to/Cosmic_OverlayV2/scripts/OTLogArchiving && sudo node archive.js<br>
 0 0 * * 0 root cd /path/to/Cosmic_OverlayV2/scripts/OTUpload && sudo node upload.js<br>
 ***** root cd /path/to/Cosmic_OverlayV2/scripts/OTHeartbeat && sudo node ping.js
+0 8 * * * root cd /path/to/Cosmic_OverlayV2/scripts/OTNodeReport && sudo node report.js
