@@ -24,6 +24,8 @@ var log_arch = overlay_config.scripts.log_archiving.enabled;
 var aws_backup = overlay_config.scripts.aws_backup.enabled;
 var report = overlay_config.scripts.report.enabled;
 
+module.exports ={
+menu: async function menu(){
 try{
   (async () => {
     const otexist = await prechecks.otexist();
@@ -49,7 +51,8 @@ try{
 		console.log('\x1b[35m',"[2] - Back Up Menu");
 		console.log('\x1b[35m',"[3] - Scripts Menu");
 		console.log('\x1b[35m',"[4] - Log Menu");
-		console.log('\x1b[35m',"[5] - Node Controls",'\n');
+		console.log('\x1b[35m',"[5] - Node Controls");
+    console.log('\x1b[35m',"[0] - Exit",'\n');
 
         const response = await prompts({
           type: 'text',
@@ -63,6 +66,7 @@ try{
               console.log('\x1b[35m',"[2] - Restore a node directly from AWS bucket: ");
               console.log('\x1b[32m',"      "+aws_bucket_filepath);
               console.log('\x1b[35m',"[3] - Restore a node from local backup from /root/OTawsbackup");
+              console.log('\x1b[35m',"[0] - Return to main menu",'\n');
 
                   const response = await prompts({
                     type: 'text',
@@ -162,6 +166,10 @@ try{
                          }
                        })();
                      }
+                  }else if(response.response == '0'){
+                    module.exports.menu();
+                  }else{
+                    console.log('\x1b[31m',"Exited Install Menu.");
                   }
                 })();
 
@@ -171,6 +179,7 @@ try{
             console.log('\x1b[35m',"[1] - Create a local backup file");
             console.log('\x1b[35m',"[2] - Create a backup file and upload it to AWS bucket: "+awsbucket);
             console.log('\x1b[35m',"[3] - Delete local backups in /root/OTBackups/backup");
+            console.log('\x1b[35m',"[0] - Return to main menu");
 
             const response = await prompts({
               type: 'text',
@@ -190,6 +199,8 @@ try{
               if(await controls_util.cleanbackups() == 'fail'){
                 return;
               }
+            }else if(response.response == '0'){
+              module.exports.menu();
             }else{
               console.log('\x1b[31m',"Exited Back up Menu.");
             }
@@ -238,7 +249,8 @@ try{
             console.log(" ");
             console.log('\x1b[35m', "[1] - Start maintenance scripts");
             console.log('\x1b[35m', "[2] - Stop maintenance scripts");
-            console.log('\x1b[35m', "[3] - Restart maintenance scripts",'\n');
+            console.log('\x1b[35m', "[3] - Restart maintenance scripts");
+            console.log('\x1b[35m', "[0] - Return to main menu",'\n');
 
             const response = await prompts({
               type: 'text',
@@ -258,6 +270,8 @@ try{
               scripts_util.restartscripts(function(response){
                 //console.log(response);
               });
+            }else if(response.response == '0'){
+              module.exports.menu();
             }else{
               console.log('\x1b[31m',"Exited Scripts Menu.");
             }
@@ -269,6 +283,7 @@ try{
             console.log('\x1b[35m', "[3] - Display Log file info");
             console.log('\x1b[35m', "[4] - Display Archives");
             console.log('\x1b[35m', "[5] - Delete Archives");
+            console.log('\x1b[35m', "[0] - Return to main menu");
 
             const response = await prompts({
               type: 'text',
@@ -296,6 +311,8 @@ try{
               if(await logs_util.deletearchives() == 'fail'){
                 return;
               }
+            }else if(response.response == '0'){
+              module.exports.menu();
             }else{
               console.log('\x1b[31m',"Exited Log Menu.");
             }
@@ -306,6 +323,7 @@ try{
             console.log('\x1b[35m', "[2] - Stop node");
             console.log('\x1b[35m', "[3] - Restart node");
             console.log('\x1b[35m', "[4] - Display node credentials");
+            console.log('\x1b[35m',"[0] - Return to main menu",'\n');
 
             const response = await prompts({
               type: 'text',
@@ -329,10 +347,14 @@ try{
               controls_util.credits(function(response){
                 //console.log(response);
               });
+            }else if(response.response == '0'){
+              module.exports.menu();
             }else{
               console.log('\x1b[31m',"Exited Control Menu.");
             }
           })();
+        }else if(response.response == '0'){
+          console.log('\x1b[31m',"Exited Main Menu.");
         }else{
           console.log('\x1b[31m',"Exited Main Menu.");
         }
@@ -341,3 +363,6 @@ try{
       console.log('\x1b[31m',e);
       return'fail';
     }
+}
+}
+module.exports.menu();

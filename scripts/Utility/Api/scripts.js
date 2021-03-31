@@ -39,7 +39,8 @@ module.exports={
         }
 
     }catch(e){
-      console.log(e);
+      console.log('\x1b[34m Unable to display dashboard at this time.. The node is probably reconnecting the network.','\n')
+      //console.log(e);
     }
   }
 }

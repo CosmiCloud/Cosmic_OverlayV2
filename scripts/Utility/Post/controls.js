@@ -15,6 +15,10 @@ module.exports ={
       await exec(restart);
 
       console.log('\x1b[32m',"Node has restarted.",'\n');
+
+      var overlay = require('../../../start_overlay.js');
+      overlay.menu();
+
     }catch(e){
       console.log('\x1b[31m',e);
       return'fail';
@@ -32,22 +36,29 @@ module.exports ={
         await exec(start);
 
         console.log('\x1b[32m',"Node has started.",'\n');
+
+        var overlay = require('../../../start_overlay.js');
+        overlay.menu();
+
       }catch(e){
         console.log('\x1b[31m',e);
         return'fail';
     }
   },
 
-  stop: function stop(){
+  stop: async function stop(){
       console.log('\x1b[35m',"Stopping node...");
       var stop = 'sudo docker stop otnode'
 
-      exec(stop, (error, success, stderr) => {
+      await exec(stop, (error, success, stderr) => {
           if (error){
               console.log('\x1b[31m',"Node stop failed: " + error);
               return'fail';
           }else{
               console.log('\x1b[32m',"Node has stopped.",'\n');
+
+              var overlay = require('../../../start_overlay.js');
+              overlay.menu();
           }
       });
   },
@@ -132,7 +143,8 @@ module.exports ={
       console.log('\x1b[35m',"-------Back up files-------");
       console.log(stdout);
 
-      return'success';
+      var overlay = require('../../../start_overlay.js');
+      overlay.menu();
 
     }catch(e){
       console.log('\x1b[31m',e);
@@ -161,7 +173,8 @@ module.exports ={
       await exec(cleannode);
       console.log('\x1b[33m',"The back up on the node has been removed to preserve space.");
 
-      return'success';
+      var overlay = require('../../../start_overlay.js');
+      overlay.menu();
 
     }catch(e){
       console.log('\x1b[31m',e);

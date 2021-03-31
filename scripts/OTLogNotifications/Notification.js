@@ -35,13 +35,15 @@ async function notification(){
 
             exec(command, (error, stdout, stderr) => {
               if (error) {
+                console.log(date+' - scripts/Notification.js: '+searchfor+' was not found.');
                 return;
               }else{
-                console.log(date+' - scripts/Notification.js: '+obj.header+' was triggered.');
+                console.log(date+' - scripts/Notification.js: '+searchfor+' was found.');
                 client.sendMessage(chatId, header + stdout , {
                   disableWebPagePreview: true,
                   disableNotification: false,
                 });
+                console.log(date+' - scripts/Notification.js: '+header+' notification was sent.');
               }
             });
         }else{

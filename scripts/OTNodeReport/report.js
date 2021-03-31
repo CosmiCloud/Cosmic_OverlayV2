@@ -63,8 +63,6 @@ async function report(){
                   os.EOL+
                  'Daily Status Report for '+node_name+os.EOL+
                   os.EOL+
-                 'CPU Usage: '+cpuusage+os.EOL+
-                  os.EOL+
                  'Storage Usage: '+storageusage+os.EOL+
                   os.EOL+
                  'Log Size: '+logsize+os.EOL+
@@ -82,6 +80,7 @@ async function report(){
     var balance = JSON.parse(balance);
     var chain_count  = Object.keys(balance).length;
 
+    console.log(date+' - scripts/report.js: Finishing building report...');
     for(var i = 0; i < chain_count; i++) {
       var obj = Object.entries(balance)[i];
       var obj = obj[1];
@@ -98,6 +97,7 @@ async function report(){
               os.EOL
     }
 
+    console.log(date+' - scripts/report.js: Sending report...');
     await client.sendMessage(chatId,report, {
       disableWebPagePreview: true,
       disableNotification: false,

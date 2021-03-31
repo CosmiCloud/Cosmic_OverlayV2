@@ -9,7 +9,6 @@ module.exports ={
       var logs = "sudo docker logs otnode --since 24h"
       var { stdout, stderr } = await exec(logs,{maxBuffer: 1024 * 2000});
       console.log(stdout);
-
     }catch(e){
       console.log('\x1b[31m',e);
     }
@@ -25,6 +24,8 @@ module.exports ={
       console.log('\x1b[35m',"----------------Log Archives----------------");
       console.log(stdout);
 
+      var overlay = require('../../../start_overlay.js');
+      await overlay.menu();
     }catch(e){
       console.log('\x1b[31m',e);
     }
@@ -61,6 +62,8 @@ module.exports ={
           console.log('\x1b[35m',"----------------Log Archives----------------");
           console.log(stdout);
 
+          var overlay = require('../../../start_overlay.js');
+          await overlay.menu();
     }catch(e){
       console.log('\x1b[31m',e);
     }
@@ -76,6 +79,9 @@ module.exports ={
       var { stdout, stderr } = await exec(get_log_size);
       console.log('\x1b[35m',stdout);
 
+      var overlay = require('../../../start_overlay.js');
+      await overlay.menu();
+
     }catch(e){
       console.log('\x1b[31m',e);
     }
@@ -87,6 +93,9 @@ module.exports ={
       var { stdout, stderr } = await exec(displayarchives);
       console.log('\x1b[35m',"----------------Log Archives----------------");
       console.log(stdout);
+
+      var overlay = require('../../../start_overlay.js');
+      await overlay.menu();
     }catch(e){
       console.log('\x1b[31m',e);
       return'fail';

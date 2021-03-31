@@ -107,7 +107,8 @@ module.exports = {
       await exec(upload);
       console.log('\x1b[32m',"AWS backup triggered, if your configuration was correct, you can check AWS S3 to find your backup.");
 
-      return'success';
+      var overlay = require('../../start_overlay.js');
+      await overlay.menu();
 
     }catch(e){
       console.log('\x1b[31m',e);
