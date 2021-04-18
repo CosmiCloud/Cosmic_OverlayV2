@@ -39,32 +39,26 @@ module.exports ={
 
         if (blockchain == 'ethr:mainnet'){
           ethereum_warn = 'You are restoring to the Ethereum blockchain.'
-          mv_eth = 'sudo docker cp /root/OTawsbackup/erc725_identity.json otnode:/ot-node/data/erc725_identity.json'
         }
 
         if (blockchain == 'sfc:mainnet'){
           starfleet_warn = 'You are restoring to the Starfleet blockchain.'
-          mv_sfc = 'sudo docker cp /root/OTawsbackup/sfc_erc725_identity.json otnode:/ot-node/data/starfleet_identity.json'
         }
 
         if (blockchain == 'xdai:mainnet'){
           xDai_warn = 'You are restoring to the xDai blockchain.'
-          mv_xDai = 'sudo docker cp /root/OTawsbackup/xdai_erc725_identity.json otnode:/ot-node/data/xdai_erc725_identity.json'
         }
 
         if (blockchain == 'xdai:testnet'){
           xDai_warn = 'You are restoring to the xDai blockchain.'
-          mv_xDai = 'sudo docker cp /root/OTawsbackup/xdai_erc725_identity.json otnode:/ot-node/data/xdai_erc725_identity.json'
         }
 
         if (blockchain == 'ethr:rinkeby:1'){
           rinkeby_warn = 'You are restoring to the Rinkeby blockchain.'
-          mv_rnk = 'sudo docker cp /root/OTawsbackup/rinkeby_identity.json otnode:/ot-node/data/rinkeby_identity.json'
         }
 
         if (blockchain == 'ethr:rinkeby:2'){
           rinkeby2_warn = 'You are restoring a 2nd profile to the Rinkeby blockchain.'
-          mv_rnk2 = 'sudo docker cp /root/OTawsbackup/rinkeby_2_erc725_identity.json otnode:/ot-node/data/rinkeby_2_erc725_identity.json'
         }
       }
 
@@ -95,7 +89,7 @@ module.exports ={
         console.log('\x1b[33m',rinkeby_warn);
       }
       if(rinkeby2_warn){
-        console.log('\x1b[33m',kovan_warn);
+        console.log('\x1b[33m',rinkeby2_warn);
       }
       console.log('\x1b[33m',"Restore cannot be stopped once setting are confirmed.");
       console.log('\x1b[33m',"#################################### WARNING ################################",'\n');
@@ -113,29 +107,20 @@ module.exports ={
           console.log('\x1b[35m',"This may take awhile...");
           await exec(image);
 
-          //mv identities
-          if(mv_eth){
-            await exec(mv_eth);
-          }
-          if(mv_sfc){
-            await exec(mv_sfc);
-          }
-          if(mv_xDai){
-            await exec(mv_xDai);
-          }
-          if(mv_rnk){
-            await exec(mv_rnk);
-          }
-
           console.log('\x1b[32m',"Otnode image has been installed.",'\n');
           var copyscript = "sudo mkdir -p /root/OTRestore && sudo docker cp otnode:/ot-node/current/scripts/restore.sh /root/OTRestore"
           await exec(copyscript);
 
-          //run restore script
-          console.log('\x1b[32m',"Node restore started!");
-          await exec(restore);
+          console.log('\x1b[32m',"Ensuring migrations have ran...",'\n');
+          var mk_mgrtns = "sudo mkdir -p /root/migrations && sudo touch /root/migrations/1_m1PayoutAllMigrationFile && sudo touch /root/migrations/4_m4ArangoMigrationFile && sudo touch /root/migrations/4_m4ArangoMigrationFile && sudo touch /root/migrations/5_m5ArangoPasswordMigrationFile && sudo touch /root/migrations/6_m6OperationalDBMigrationFile && sudo touch /root/migrations/7_m7ArangoDatasetSignatureMigrationFile && sudo docker cp /root/migrations/ otnode:/ot-node/data/"
+          await exec(mk_mgrtns);
 
-          console.log('\x1b[32m',"Node has been restored!",'\n');
+          //run restore script
+          await exec(restore);
+          console.log('\x1b[32m',"Node restore started!",'\n');
+
+          var rm_backup = 'sudo rm -rf /root/OTawsbackup'
+          await exec(rm_backup);
 
           //move arango db text file
           // console.log('\x1b[35m',"Moving an arango.txt file that can sometimes interfer with node backups to /root/OTarango_backup ...",'\n');

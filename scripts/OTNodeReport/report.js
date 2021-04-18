@@ -4,7 +4,7 @@ const exec = util.promisify(require('child_process').exec);
 const config = require('../../configurations/overlay_config.json');
 
 const node_name = config.scripts.node_name;
-const token = config.scripts.heartbeat.telegram_bot_token;
+const token = config.scripts.report.telegram_bot_token;
 const chatId = config.scripts.telegram_chat_id
 const os = require('os');
 const fs = require('fs');

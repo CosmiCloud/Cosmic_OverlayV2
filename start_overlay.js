@@ -9,20 +9,25 @@ const node_configure = require('./configurations/configure.js');
 const machine = require('./scripts/Utility/Node/machine.js');
 const restore = require('./scripts/Utility/Node/restore.js');
 const controls_util = require('./scripts/Utility/Post/controls.js');
-const api = require('./scripts/Utility/Api/scripts.js');
+const dashboard = require('./scripts/Utility/Api/dashboard.js');
+const createJob = require('./scripts/Utility/Api/createJob.js');
+const createdJobs = require('./scripts/Utility/Api/createdjobs.js');
+const export_data = require('./scripts/Utility/Api/export.js');
 const logs_util = require('./scripts/Utility/Post/logs.js');
 const scripts_util = require('./scripts/Utility/Post/scripts.js');
 const aws = require('./scripts/AWS/aws.js');
 
+
 var awsbucket = overlay_config.scripts.aws_bucket_name;
 var network = overlay_config.scripts.network;
-var aws_bucket_filepath = overlay_config.scripts.aws_bucket_filepath;
+var s3_url_of_backup = overlay_config.scripts.s3_url_of_backup;
 var backup_filepath = overlay_config.scripts.backup_filepath;
 var heartbeat = overlay_config.scripts.heartbeat.enabled;
 var log_not = overlay_config.scripts.log_notifications.enabled;
 var log_arch = overlay_config.scripts.log_archiving.enabled;
 var aws_backup = overlay_config.scripts.aws_backup.enabled;
 var report = overlay_config.scripts.report.enabled;
+var create_aws_job = overlay_config.scripts.create_aws_job.enabled;
 
 module.exports ={
 menu: async function menu(){
@@ -36,7 +41,7 @@ try{
       if(nodestat == 'online'){
         var nodestatus = "\x1b[32mOnline";
 
-        await api.stakes();
+        await dashboard.stakes();
       }else{
         var nodestatus = "\x1b[31mOffline";
       }
@@ -52,6 +57,7 @@ try{
 		console.log('\x1b[35m',"[3] - Scripts Menu");
 		console.log('\x1b[35m',"[4] - Log Menu");
 		console.log('\x1b[35m',"[5] - Node Controls");
+    console.log('\x1b[35m',"[6] - Data Creator Menu");
     console.log('\x1b[35m',"[0] - Exit",'\n');
 
         const response = await prompts({
@@ -64,7 +70,7 @@ try{
             (async () => {
               console.log('\x1b[35m',"[1] - Install a new node");
               console.log('\x1b[35m',"[2] - Restore a node directly from AWS bucket: ");
-              console.log('\x1b[32m',"      "+aws_bucket_filepath);
+              console.log('\x1b[32m',"      "+s3_url_of_backup);
               console.log('\x1b[35m',"[3] - Restore a node from local backup from /root/OTawsbackup");
               console.log('\x1b[35m',"[0] - Return to main menu",'\n');
 
@@ -123,7 +129,7 @@ try{
                         }
 
                         (async () => {
-                          console.log('\x1b[33m',"You are about to restore a node directly from your aws bucket: "+ aws_bucket_filepath+' on '+overlay_config.environment,'\n');
+                          console.log('\x1b[33m',"You are about to restore a node directly from your aws bucket: "+ s3_url_of_backup+' on '+overlay_config.environment,'\n');
                           const response = await prompts({
                             type: 'text',
                             name: 'response',
@@ -246,6 +252,11 @@ try{
             }else{
               console.log('\x1b[35m', "Daily Reports: ",'\x1b[31m', "                     [Disabled]");
             }
+            if(create_aws_job == 'true'){
+              console.log('\x1b[35m', "Scheduled AWS Jobs: ",'\x1b[32m', "                [Enabled]");
+            }else{
+              console.log('\x1b[35m', "Scheduled AWS Jobs: ",'\x1b[31m', "                [Disabled]");
+            }
             console.log(" ");
             console.log('\x1b[35m', "[1] - Start maintenance scripts");
             console.log('\x1b[35m', "[2] - Stop maintenance scripts");
@@ -353,6 +364,27 @@ try{
               console.log('\x1b[31m',"Exited Control Menu.");
             }
           })();
+        }else if(response.response == '6'){
+          console.log('\x1b[35m', "[1] - Create a Job");
+          console.log('\x1b[35m', "[2] - View created jobs");
+          console.log('\x1b[35m', "[3] - Export a dataset");
+          console.log('\x1b[35m', "[0] - Return to main menu",'\n');
+
+          const response = await prompts({
+            type: 'text',
+            name: 'response',
+            message: '\x1b[35mWhat would you like to do?'
+          });
+
+          if(response.response == '1'){
+            await createJob.createJob();
+          }else if(response.response == '2'){
+            await createdJobs.myJobs();
+          }else if(response.response == '3'){
+            await export_data.export_data();
+          }else if(response.response == '0'){
+            module.exports.menu();
+          }
         }else if(response.response == '0'){
           console.log('\x1b[31m',"Exited Main Menu.");
         }else{

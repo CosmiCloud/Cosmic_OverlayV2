@@ -4,6 +4,7 @@
     	"remoteWhitelist": [ "IP or host of the service that will be interacting with your node, e.g. SAP server, a Dapp accessing the DKG, data pipeline service etc ", "127.0.0.1"]
 	},
 	"initial_deposit_amount": "your initial deposit amount in TRAC with 18 decimals, 1 TRAC = 1000000000000000000 ",
+	"dc_holding_time_in_minutes": 60,
 	"blockchain": {
     	"implementations": [
         	{

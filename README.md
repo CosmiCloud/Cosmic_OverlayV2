@@ -133,7 +133,19 @@ Note: This will display log file location and size.</li>
 <li>Stop node.</li>
 <li>Restart node.</li>
 <li>Display node credentials. <br>
-Note: If they exist, this will display rinkeby identity, kovan identity, starfleet identity, xDai identity, erc725 id, your node identity, and your houston password.</li>
+Note: If they exist, this will display rinkeby identity, starfleet identity, xDai identity, erc725 id, your node identity, and your houston password.
+</li>
+</ol><br>
+
+<b>Data Creator Menu:</b>
+<ol>
+<li>Create a Job<br>
+Note: This feature pushes data from a local directory onto the ODN in the form of an offer/job. A dummy data file is provided and used if you create a job only using the defaults.<br>
+This is for more advanced users. DO NOT use this feature if you do not want to permanently spend your aTRAC/TRAC tokens.
+</li>
+<li>View Created Jobs<br>
+Note: This opens a sub menu that allows you to return All, Active, Completed, and Not Started offer statuses.
+</li>
 </ol><br>
 
 <b>----------------------------------------------------------------Optional:------------------------------------------------------------------</b><br>
@@ -145,5 +157,5 @@ Place the following in your crontab and make sure the path to the scripts are co
 */5 * * * * root cd /path/to/Cosmic_OverlayV2/scripts/OTLogNotifications && sudo node Notification.js<br>
 0 0 1 * * root cd /path/to/Cosmic_OverlayV2/scripts/OTLogArchiving && sudo node archive.js<br>
 0 0 * * 0 root cd /path/to/Cosmic_OverlayV2/scripts/OTUpload && sudo node upload.js<br>
-***** root cd /path/to/Cosmic_OverlayV2/scripts/OTHeartbeat && sudo node ping.js
+***** root cd /path/to/Cosmic_OverlayV2/scripts/OTHeartbeat && sudo node ping.js<br>
 0 8 * * * root cd /path/to/Cosmic_OverlayV2/scripts/OTNodeReport && sudo node report.js

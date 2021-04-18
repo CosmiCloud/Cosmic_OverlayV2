@@ -18,7 +18,7 @@ module.exports={
       var allow4 = 'sudo ufw allow 22/tcp'
       await exec(allow4,{});
 
-      console.log('\x1b[32m',"Firewall configured.",'\n');
+      console.log('\x1b[35m',"Firewall configured.",'\n');
 
       //enable firewall
       console.log('\x1b[35m',"Enabling firewall...");

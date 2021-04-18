@@ -7,7 +7,7 @@
         "aws_access_key_id" : "*aws key id here*",
         "aws_secret_access_key" : "*aws secret access key here*",
         "aws_bucket_name" : "*aws bucket here*",
-        "aws_bucket_filepath" : "*example* bucket/path/otnode_47.XXX.XXX.XX/2021-02-16T16:06:16.216Z/",
+        "s3_url_of_backup" : "*example* bucket/path/otnode_47.XXX.XXX.XX/2021-02-16T16:06:16.216Z/",
         "log_notifications" :{
           "enabled" : "true",
           "frequency" : "*/5 * * * *",
@@ -118,6 +118,17 @@
           "enabled" : "true",
           "telegram_bot_token" : "*telegram bot token here*",
           "frequency" : "0 8 * * *"
+        },
+        "create_aws_job":{
+          "enabled" : "false",
+          "standard" : "GS1-EPCIS",
+          "type" : "text/xml",
+          "network" : "ethr:rinkeby",
+          "holding_time_in_minutes" : "5",
+          "token_amount_per_holder" : "12",
+          "s3_url_of_data" : "s3://otnode-backup/testnode/sampleData/",
+          "telegram_bot_token" : "*telegram bot token here*",
+          "frequency" : "0 0 1 * *"
         }
       }
   }
