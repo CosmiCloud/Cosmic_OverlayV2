@@ -226,7 +226,7 @@ module.exports={
         var obj = Object.entries(implementations)[i];
         var obj = obj[1];
         var blockchain = obj.network_id
-        console.log(blockchain);
+        //console.log(blockchain);
 
         if (blockchain = 'ethr:rinkeby:1'){
           var network = 'ethr:rinkeby'
@@ -315,6 +315,8 @@ module.exports={
           console.log('\x1b[35m', "Creation Gas Cost: \x1b[32m"+xdai_create_gas+" xDai");
           console.log(" ");
         }
+
+        var params = '{"dataset_id": "'+dataset_id+'", "blockchain_id": "'+network+'", "holding_time_in_minutes": '+hold_time+', "token_amount_per_holder": "'+payment+'"}'
       }else{
 
         var othub_home = 'sudo curl -X GET "https://testnet-api.othub.info/api/home/HomeV3" -H "accept: text/plain"'
@@ -349,12 +351,10 @@ module.exports={
           console.log('\x1b[35m', "Total Trac Cost: \x1b[32m"+token_amount+" aTrac         \x1b[35mTotal Trac Cost: \x1b[32m"+total_payment+" aTrac")
           console.log('\x1b[35m', "Gas Cost:        \x1b[32m"+total_rink_gas+" rEth");
           console.log(" ");
+
+          var params = '{"dataset_id": "'+dataset_id+'", "network_id": "'+network+'", "holding_time_in_minutes": '+hold_time+', "token_amount_per_holder": "'+payment+'"}'
         }
       }
-
-      var hold_time = Number(hold_time);
-      var payment = Number(payment);
-      var params = '{"dataset_id": "'+dataset_id+'", "network_id": "'+network+'", "holding_time_in_minutes": '+hold_time+', "token_amount_per_holder": "'+payment+'"}'
 
       if(hasDataSetID){
         var response = await prompts({
