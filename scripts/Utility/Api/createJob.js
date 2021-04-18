@@ -70,6 +70,11 @@ module.exports={
           var path = '/root/OTDataUpload/data.xml'
           var data = /[^/]*$/.exec(path)[0];
 
+          var file_size = 'sudo wc -c < '+path
+          var file_size = await exec(file_size);
+          var file_size = file_size.stdout
+          var file_size = file_size.slice(0, -1);
+
         }else{
           console.log("\x1b[33mUnable to find file. Please make sure your file path is correct or return to the main menu by pressing 0.")
           module.exports.createJob();
@@ -80,17 +85,17 @@ module.exports={
           var path = response.response
           var data = /[^/]*$/.exec(path)[0];
 
+          var file_size = 'sudo wc -c < '+path
+          var file_size = await exec(file_size);
+          var file_size = file_size.stdout
+          var file_size = file_size.slice(0, -1);
+
         }else{
           console.log("\x1b[33mUnable to find file. Please make sure your file path is correct or return to the main menu by pressing 0.")
           module.exports.createJob();
           return;
         }
       }
-
-      var file_size = 'sudo wc -c < '+path
-      var file_size = await exec(file_size);
-      var file_size = file_size.stdout
-      var file_size = file_size.slice(0, -1);
 
       console.log("\x1b[35mUpload file approved. Locating docker overlay and moving data file to your node.")
       console.log(" ")
@@ -154,6 +159,10 @@ module.exports={
         console.log('\x1b[33m', "Please provide a valid number for payment.");
         module.exports.createJob();
         return;
+      }else if(response.response == ""){
+        console.log('\x1b[33m', "Please provide a valid number for payment.");
+        module.exports.createJob();
+        return;
       }else{
         if(response.response % 1 != 0){
 
@@ -201,6 +210,10 @@ module.exports={
         console.log('\x1b[33m', "Please provide a valid number for holding time.");
         module.exports.createJob();
         return;
+      }else if(response.response == ""){
+        console.log('\x1b[33m', "Please provide a valid number for holding time.");
+        module.exports.createJob();
+        return;
       }else{
         var hold_time = Math.trunc( response.response );
       }
@@ -213,6 +226,7 @@ module.exports={
         var obj = Object.entries(implementations)[i];
         var obj = obj[1];
         var blockchain = obj.network_id
+        console.log(blockchain);
 
         if (blockchain = 'ethr:rinkeby:1'){
           var network = 'ethr:rinkeby'
@@ -246,6 +260,7 @@ module.exports={
         }else if(response.response == '0'){
           var overlay = require('../../../start_overlay.js');
           await overlay.menu();
+          return;
         }
 
         var othub_home = await exec(othub_home);
@@ -274,7 +289,7 @@ module.exports={
           var total_payment = payment_str * 3;
 
           console.log('\x1b[35m', "Data Size:       \x1b[32m"+data_size+"B            \x1b[35mData Size: "+file_size+"B");
-          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.      \x1b[35mHolding Time: "+hold_time+" minutes");
+          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.      \x1b[35mHolding Time: "+hold_time+" minute(s)");
           console.log('\x1b[35m', "Total Trac Cost:  \x1b[32m"+token_amount+" Trac     \x1b[35mTotal Trac Cost: \x1b[32m"+total_payment+" Trac");
           console.log('\x1b[35m', "Gas Cost:         \x1b[32m"+eth_create_gas+" Eth");
           console.log(" ");
@@ -295,7 +310,7 @@ module.exports={
           var total_payment = payment_str * 3;
 
           console.log('\x1b[35m', "Data Size:       \x1b[32m"+data_size+"B              \x1b[35mData Size: \x1b[32m"+file_size+"B");
-          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.        \x1b[35mHolding Time: \x1b[32m"+hold_time+" minutes");
+          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.        \x1b[35mHolding Time: \x1b[32m"+hold_time+" minute(s)");
           console.log('\x1b[35m', "Total Trac Cost: \x1b[32m"+token_amount+" xTrac       \x1b[35mTotal Trac Cost: \x1b[32m"+total_payment+" xTrac");
           console.log('\x1b[35m', "Creation Gas Cost: \x1b[32m"+xdai_create_gas+" xDai");
           console.log(" ");
@@ -330,20 +345,22 @@ module.exports={
           var total_payment = payment_str * 3;
 
           console.log('\x1b[35m', "Data Size:       \x1b[32m"+data_size+"B                \x1b[35mData Size: \x1b[32m"+file_size+"B");
-          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.          \x1b[35mHolding Time: \x1b[32m"+hold_time+" minutes");
-          console.log('\x1b[35m', "Total Trac Cost: \x1b[32m"+token_amount+" aTrac         \x1b[35mTotal Trac Cost: \x1b[32m"+payment_str+" aTrac")
+          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.          \x1b[35mHolding Time: \x1b[32m"+hold_time+" minute(s)");
+          console.log('\x1b[35m', "Total Trac Cost: \x1b[32m"+token_amount+" aTrac         \x1b[35mTotal Trac Cost: \x1b[32m"+total_payment+" aTrac")
           console.log('\x1b[35m', "Gas Cost:        \x1b[32m"+total_rink_gas+" rEth");
           console.log(" ");
         }
       }
 
-      var params = '{"dataset_id": "'+dataset_id+'", "network_id": "'+network+'", "holding_time_in_minutes": "'+hold_time+'", "token_amount_per_holder": "'+payment+'"}'
+      var hold_time = Number(hold_time);
+      var payment = Number(payment);
+      var params = '{"dataset_id": "'+dataset_id+'", "network_id": "'+network+'", "holding_time_in_minutes": '+hold_time+', "token_amount_per_holder": "'+payment+'"}'
 
       if(hasDataSetID){
         var response = await prompts({
           type: 'text',
           name: 'response',
-          message: '\x1b[35mAre you sure you want to pay each data holder '+payment_str+' Trac to hold data for '+hold_time+' minutes? \x1b[31mTHIS CANNOT BE REVERSED.(y/n)'
+          message: '\x1b[35mAre you sure you want to pay each data holder '+payment_str+' Trac to hold data for '+hold_time+' minute(s)? \x1b[31mTHIS CANNOT BE REVERSED.(y/n)'
         });
 
         if(response.response == 'y'){

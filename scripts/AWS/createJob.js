@@ -134,7 +134,7 @@ module.exports = {
 
       console.log(date+" - scripts/AWS/createJob.js: Replicating data...");
       if(hasDataSetID){
-        var params = '{"dataset_id": "'+dataset_id+'", "network_id": "'+network+'", "holding_time_in_minutes": "'+holding_time+'", "token_amount_per_holder": "'+payment+'"}'
+        var params = '{"dataset_id": "'+dataset_id+'", "network_id": "'+network+'", "holding_time_in_minutes": '+holding_time+', "token_amount_per_holder": "'+payment+'"}'
         var replicate = "sudo docker exec otnode curl -X POST http://localhost:8900/api/latest/replicate -H 'accept: application/json' -H 'Content-Type: application/json' -d '"+params+"'"
         var replicate = await exec(replicate);
         var replicate = JSON.parse(replicate.stdout)
