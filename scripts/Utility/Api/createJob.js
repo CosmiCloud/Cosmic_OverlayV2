@@ -226,16 +226,15 @@ module.exports={
         var obj = Object.entries(implementations)[i];
         var obj = obj[1];
         var blockchain = obj.network_id
-        //console.log(blockchain);
 
-        if (blockchain = 'ethr:rinkeby:1'){
+        if (blockchain == 'ethr:rinkeby:1'){
           var network = 'ethr:rinkeby'
           var network_fncy = 'Rinkeby Testnet'
-        }else if (blockchain = 'ethr:mainnet'){
+        }else if (blockchain =='ethr:mainnet'){
           console.log('\x1b[35m', "[1] - Ethereum Mainnet");
-        }else if (blockchain = 'xdai:mainnet'){
+        }else if (blockchain == 'xdai:mainnet'){
           console.log('\x1b[35m', "[2] - xDai Mainnet");
-        }else if (blockchain = 'sfc:mainnet'){
+        }else if (blockchain == 'sfc:mainnet'){
           //var network = 'sfc:mainnet'
         }
       }
@@ -260,6 +259,9 @@ module.exports={
         }else if(response.response == '0'){
           var overlay = require('../../../start_overlay.js');
           await overlay.menu();
+          return;
+        }else{
+          module.exports.createJob();
           return;
         }
 
