@@ -95,7 +95,7 @@ async function job_report(){
   var token_amount = parseFloat(job_info.TokenAmountPerHolder);
   var report =  os.EOL+date+
                 os.EOL+
-               header+os.EOL+
+               node_name+' - '+header+os.EOL+
                 os.EOL+
                'Offer Id: '+job_info.OfferId+os.EOL+
                 os.EOL+
