@@ -15,7 +15,9 @@ module.exports ={
 
       ethereum_warn = ''
       starfleet_warn = ''
+      starfleet_testnet_warn = ''
       xDai_warn = ''
+      xDai_testnet_warn = ''
       rinkeby_warn = ''
       rinkeby2_warn = ''
 
@@ -41,11 +43,11 @@ module.exports ={
         }
 
         if (blockchain == 'xdai:testnet'){
-          xDai_warn = 'You are restoring to the xDai testnet blockchain.'
+          xDai_testnet_warn = 'You are restoring to the xDai testnet blockchain.'
         }
 
         if (blockchain == 'stfl:testnet'){
-          starfleet_warn = 'You are restoring to the Starfleet testnet blockchain.'
+          starfleet_testnet_warn = 'You are restoring to the Starfleet testnet blockchain.'
         }
 
         if (blockchain == 'ethr:rinkeby:1'){
@@ -77,8 +79,14 @@ module.exports ={
       if(starfleet_warn){
         console.log('\x1b[33m',starfleet_warn);
       }
+      if(starfleet_testnet_warn){
+        console.log('\x1b[33m',starfleet_testnet_warn);
+      }
       if(xDai_warn){
         console.log('\x1b[33m',xDai_warn);
+      }
+      if(xDai_testnet_warn){
+        console.log('\x1b[33m',xDai_testnet_warn);
       }
       if(rinkeby_warn){
         console.log('\x1b[33m',rinkeby_warn);
