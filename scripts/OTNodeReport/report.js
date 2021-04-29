@@ -27,14 +27,6 @@ async function report(){
   try{
     console.log(date+' - scripts/ping.js: Creating report... this may take a minute...');
 
-    console.log(date+' - scripts/report.js: Checking CPU usage...');
-    var checkcpu = "echo $(vmstat 1 2|tail -1|awk '{print $15}')"
-    var checkcpu = await exec(checkcpu);
-    var cpuusage = checkcpu.stdout
-    var cpuusage = Number(cpuusage);
-    var cpuusage = 100 - cpuusage
-    var cpuusage = cpuusage+'%'
-
     console.log(date+' - scripts/report.js: Checking storage usage...');
     var checkstorage = "sudo df --output=pcent / | tr -dc '0-9'"
     var checkstorage = await exec(checkstorage);

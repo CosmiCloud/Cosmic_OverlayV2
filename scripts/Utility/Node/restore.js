@@ -14,19 +14,10 @@ module.exports ={
       console.log('\x1b[32m',nodecfg.stdout);
 
       ethereum_warn = ''
-      mv_eth = ''
-
       starfleet_warn = ''
-      mv_sfc = ''
-
       xDai_warn = ''
-      mv_xDai = ''
-
       rinkeby_warn = ''
-      mv_rnk = ''
-
       rinkeby2_warn = ''
-      mv_rnk2 = ''
 
       const implementations = node_config.blockchain.implementations;
       var chain_count  = Object.keys(implementations).length;
@@ -41,7 +32,7 @@ module.exports ={
           ethereum_warn = 'You are restoring to the Ethereum blockchain.'
         }
 
-        if (blockchain == 'sfc:mainnet'){
+        if (blockchain == 'stfl:mainnet'){
           starfleet_warn = 'You are restoring to the Starfleet blockchain.'
         }
 
@@ -50,15 +41,19 @@ module.exports ={
         }
 
         if (blockchain == 'xdai:testnet'){
-          xDai_warn = 'You are restoring to the xDai blockchain.'
+          xDai_warn = 'You are restoring to the xDai testnet blockchain.'
+        }
+
+        if (blockchain == 'stfl:testnet'){
+          starfleet_warn = 'You are restoring to the Starfleet testnet blockchain.'
         }
 
         if (blockchain == 'ethr:rinkeby:1'){
-          rinkeby_warn = 'You are restoring to the Rinkeby blockchain.'
+          rinkeby_warn = 'You are restoring to the Rinkeby testnet blockchain.'
         }
 
         if (blockchain == 'ethr:rinkeby:2'){
-          rinkeby2_warn = 'You are restoring a 2nd profile to the Rinkeby blockchain.'
+          rinkeby2_warn = 'You are restoring a 2nd profile to the Rinkeby testnet blockchain.'
         }
       }
 
@@ -111,10 +106,6 @@ module.exports ={
           var copyscript = "sudo mkdir -p /root/OTRestore && sudo docker cp otnode:/ot-node/current/scripts/restore.sh /root/OTRestore"
           await exec(copyscript);
 
-          console.log('\x1b[32m',"Ensuring migrations have ran...",'\n');
-          var mk_mgrtns = "sudo mkdir -p /root/migrations && sudo touch /root/migrations/1_m1PayoutAllMigrationFile && sudo touch /root/migrations/4_m4ArangoMigrationFile && sudo touch /root/migrations/4_m4ArangoMigrationFile && sudo touch /root/migrations/5_m5ArangoPasswordMigrationFile && sudo touch /root/migrations/6_m6OperationalDBMigrationFile && sudo touch /root/migrations/7_m7ArangoDatasetSignatureMigrationFile && sudo docker cp /root/migrations/ otnode:/ot-node/data/"
-          await exec(mk_mgrtns);
-
           //run restore script
           await exec(restore);
           console.log('\x1b[32m',"Node restore started!",'\n');
@@ -123,18 +114,18 @@ module.exports ={
           await exec(rm_backup);
 
           //move arango db text file
-          // console.log('\x1b[35m',"Moving an arango.txt file that can sometimes interfer with node backups to /root/OTarango_backup ...",'\n');
-          // console.log('\x1b[35m',"Locating init directory for the container...");
-          // var find_init = 'sudo find /var/lib/docker/overlay2/ -maxdepth 1 -name "*-init"'
-          // const { stdout, stderr } = await exec(find_init);
-          // console.log('\x1b[32m',"Container init directory has been located.",'\n');
-          //
-          // var container = stdout.slice(0,-6);
-          // var container = stdout.slice(25,-6);
-          // var move = 'sudo mkdir -p /root/OTarango_backup && sudo mv /var/lib/docker/overlay2/' +container+ '/merged/ot-node/data/arango.txt /root/OTarango_backup'
-          // await exec(move);
-          //
-          // console.log('\x1b[32m',"Arango.txt moved from /var/lib/docker/overlay2/"+container+"/merged/ot-node/data/ to /root/OTarango_backup",'\n');
+          console.log('\x1b[35m',"Moving an arango.txt file that can sometimes interfer with node backups to /root/OTarango_backup ...",'\n');
+          console.log('\x1b[35m',"Locating init directory for the container...");
+          var find_init = 'sudo find /var/lib/docker/overlay2/ -maxdepth 1 -name "*-init"'
+          const { stdout, stderr } = await exec(find_init);
+          console.log('\x1b[32m',"Container init directory has been located.",'\n');
+
+          var container = stdout.slice(0,-6);
+          var container = stdout.slice(25,-6);
+          var move = 'sudo mkdir -p /root/OTarango_backup && sudo mv /var/lib/docker/overlay2/' +container+ '/merged/ot-node/data/arango.txt /root/OTarango_backup'
+          await exec(move);
+
+          console.log('\x1b[32m',"Arango.txt moved from /var/lib/docker/overlay2/"+container+"/merged/ot-node/data/ to /root/OTarango_backup",'\n');
           var query = "sudo docker logs --since 2s otnode"
           var time = 1;
           //display logs

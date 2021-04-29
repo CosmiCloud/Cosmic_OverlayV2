@@ -93,6 +93,33 @@ async function job_report(){
   var job_info = await exec(job_info);
   var job_info = JSON.parse(job_info.stdout);
   var token_amount = parseFloat(job_info.TokenAmountPerHolder);
+  var token_amount = token_amount.toFixed(4);
+  var holding_time = Number(job_info.HoldingTimeInMinutes);
+
+  //to hours
+  if(holding_time >= 60){
+    var holding_time = holding_time / 60
+    var label = ' hours'
+
+    //to days
+    if(holding_time >= 24){
+      var holding_time = holding_time / 24
+      var label = ' days'
+
+      //to months
+      if(holding_time >= 30){
+        var holding_time = holding_time / 30
+        var label = ' months'
+
+        //to years
+        if(holding_time >= 12){
+          var holding_time = holding_time / 12
+          var label = ' years'
+        }
+      }
+    }
+  }
+
   var report =  os.EOL+date+
                 os.EOL+
                node_name+' - '+header+os.EOL+
@@ -101,7 +128,7 @@ async function job_report(){
                 os.EOL+
                'Token Amount: '+token_amount+' Trac'+os.EOL+
                 os.EOL+
-               'Holding Time: '+job_info.HoldingTimeInMinutes+' min.'+os.EOL
+               'Holding Time: '+holding_time+label+os.EOL
 
   client.sendMessage(chatId, report , {
     disableWebPagePreview: true,
