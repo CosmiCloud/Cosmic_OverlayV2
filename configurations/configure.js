@@ -7,16 +7,16 @@ module.exports ={
     //set firewall
     try{
 
-      var removeconfig = 'sudo rm -rf /root/.origintrail_noderc'
+      removeconfig = 'sudo rm -rf /root/.origintrail_noderc'
       await exec(removeconfig);
 
       //build the node config file mainnet
       console.log('\x1b[35m',"Writing node configuration file...");
-      var node = 'sudo cp '+ __dirname+'/node_config.json /root/.origintrail_noderc'
+      node = 'sudo cp '+ __dirname+'/node_config.json /root/.origintrail_noderc'
       await exec(node);
 
       console.log('\x1b[35m',"Checking configuration for syntax errors...");
-      var jqcheck = 'jq "." /root/.origintrail_noderc'
+      jqcheck = 'jq "." /root/.origintrail_noderc'
       await exec(jqcheck);
 
       console.log('\x1b[32m',"Node configuration has been created.",'\n');

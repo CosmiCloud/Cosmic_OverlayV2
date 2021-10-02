@@ -57,8 +57,6 @@ async function report(){
                   os.EOL+
                  'Storage Usage: '+storageusage+os.EOL+
                   os.EOL+
-                 'Log Size: '+logsize+os.EOL+
-                  os.EOL+
                  'Graph Size:'+os.EOL+
                   'Edges:'+info.graph_size.number_of_edges+os.EOL+
                   'Vertices:'+info.graph_size.number_of_vertices+os.EOL+

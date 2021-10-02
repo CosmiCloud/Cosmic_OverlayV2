@@ -20,12 +20,30 @@
         	{
             	"blockchain_title": "xDai",
             	"network_id": "xdai:mainnet",
-            	"node_wallet": "your ethereum wallet address here",
-            	"node_private_key": "your ethereum wallet's private key here",
-            	"management_wallet": "your ethereum management wallet public key here",
-              "dh_price_factor" : "2",
+            	"node_wallet": "your xdai wallet address here",
+            	"node_private_key": "your xdai wallet's private key here",
+            	"management_wallet": "your xdai management wallet public key here",
+							"dh_price_factor" : "0.10",
+              "disable_auto_payouts" : "false"
+        	},
+        	{
+            	"blockchain_title": "Polygon",
+            	"network_id": "polygon:mainnet",
+            	"node_wallet": "your polygon wallet address here",
+            	"node_private_key": "your polygon wallet's private key here",
+            	"management_wallet": "your polygon management wallet public key here",
+							"dh_price_factor" : "0.10",
               "disable_auto_payouts" : "false"
         	}
     	]
-	}
+	},
+  "dataset_pruning": {
+		"enabled": true,
+  	"imported_pruning_delay_in_minutes": 1440,
+  	"replicated_pruning_delay_in_minutes": 1440,
+  	"low_estimated_value_datasets":{
+      "enabled": true,
+      "minimum_free_space_percentage": 30
+    }
+  }
 }

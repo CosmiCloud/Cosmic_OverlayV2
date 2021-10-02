@@ -1,15 +1,60 @@
+const overlay = require('../start_overlay.js');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const overlay_config = require('../configurations/overlay_config.json');
+const node_config = require('../configurations/node_config.json');
+const fs = require('fs');
+const os = require('os');
+const dateFormat = require('dateformat');
 const prompts = require('prompts');
-const overlay_config = require('../../../configurations/overlay_config.json');
-const node_config = require('../../../configurations/node_config.json');
-const fs = require('fs')
+var date = dateFormat(new Date(), "yyyy-mm-dd-h:MM:ss");
+const { TelegramClient } = require('messaging-api-telegram');
+
+const s3_url_of_data = overlay_config.scripts.create_aws_job.s3_url_of_data;
+const chatId = overlay_config.scripts.telegram_chat_id;
+const token = overlay_config.scripts.create_aws_job.telegram_bot_token;
+const client = new TelegramClient({
+  accessToken: token,
+});
 
 module.exports={
-    //create a job
-    createJob: async function createJob(){
-    try {
+    creators_menu: async function menu(){
+      try {
+        console.log('\x1b[35m', "[1] - Create a Job");
+        console.log('\x1b[35m', "[2] - View created jobs");
+        console.log('\x1b[35m', "[3] - Export a dataset");
+        console.log('\x1b[35m', "[0] - Return to main menu",'\n');
 
+        const response = await prompts({
+          type: 'text',
+          name: 'response',
+          message: '\x1b[35mWhat would you like to do?'
+        });
+
+        if(response.response == '1'){
+          module.exports.create_job();
+
+        }else if(response.response == '2'){
+          module.exports.created_jobs();
+
+        }else if(response.response == '3'){
+          module.exports.export_data();
+
+        }else if(response.response == '0'){
+          const overlay = require('../start_overlay.js');
+          overlay.menu();
+        }else{
+          const overlay = require('../start_overlay.js');
+          console.log('\x1b[31m',"Exited Creators Menu.");
+          overlay.menu();
+        }
+    }catch(e){
+      console.log('\x1b[31m Something broke in the log menu: '+ e,'\n');
+    }
+  },
+
+  create_job: async function create_job(){
+    try {
       console.log('\x1b[35m', "[1] - GS1-EPCIS");
       console.log('\x1b[35m', "[2] - OT-JSON");
       console.log('\x1b[35m', "[3] - WOT (Web of Things)");
@@ -38,13 +83,11 @@ module.exports={
         standard = 'GS1-EPCIS'
         type = 'text/xml'
       }else if(response.response == '0'){
-        var overlay = require('../../../start_overlay.js');
-        await overlay.menu();
+        module.exports.creators_menu();
         return;
       }else{
         console.log('\x1b[35mNot a valid response. Returning to main menu.')
-        var overlay = require('../../../start_overlay.js');
-        await overlay.menu();
+        module.exports.creators_menu();
         return;
       }
 
@@ -57,11 +100,10 @@ module.exports={
       });
 
       if(response.response == '0'){
-        var overlay = require('../../../start_overlay.js');
-        await overlay.menu();
+        module.exports.creators_menu();
 
       }else if(response.response == ''){
-        var mvdata = 'sudo mkdir -p /root/OTDataUpload && sudo rm -rf /root/OTDataUpload/* && sudo cp '+ __dirname+'/data/testdata.xml /root/OTDataUpload/data.xml'
+        var mvdata = 'sudo mkdir -p /root/OTDataUpload && sudo rm -rf /root/OTDataUpload/* && sudo cp '+ __dirname+'/testdata.xml /root/OTDataUpload/data.xml'
         await exec(mvdata);
 
         if (fs.existsSync('/root/OTDataUpload/data.xml')) {
@@ -124,7 +166,7 @@ module.exports={
       var time = 1;
       const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-  	  do {
+      do {
         var import_res = 'sudo docker exec otnode curl -s -X GET http://localhost:8900/api/latest/import/result/'+import_handler_id+' -H "accept: application/json"'
         var import_res = await exec(import_res);
         var stdout = JSON.parse(import_res.stdout);
@@ -139,9 +181,9 @@ module.exports={
         }else{
           time++;
         }
-  			await snooze(2000);
-  	  }
-  	  while(!hasDataSetID && time <= 20);
+        await snooze(2000);
+      }
+      while(!hasDataSetID && time <= 20);
 
       if(!hasDataSetID){
         console.log('\x1b[31mImport failed! Did you choose the right data standard?');
@@ -234,6 +276,8 @@ module.exports={
           console.log('\x1b[35m', "[1] - Ethereum Mainnet");
         }else if (blockchain == 'xdai:mainnet'){
           console.log('\x1b[35m', "[2] - xDai Mainnet");
+        }else if (blockchain == 'xdai:mainnet'){
+          console.log('\x1b[35m', "[3] - Polygon Mainnet");
         }else if (blockchain == 'sfc:mainnet'){
           //var network = 'sfc:mainnet'
         }
@@ -256,12 +300,14 @@ module.exports={
         }else if(response.response == '2'){
           var network = 'xdai:mainnet'
           var network_fncy = 'xDai Mainnet'
+        }else if(response.response == '3'){
+          var network = 'polygon:mainnet'
+          var network_fncy = 'Polygon Mainnet'
         }else if(response.response == '0'){
-          var overlay = require('../../../start_overlay.js');
-          await overlay.menu();
+          module.exports.creators_menu();
           return;
         }else{
-          module.exports.createJob();
+          module.exports.create_job();
           return;
         }
 
@@ -280,10 +326,10 @@ module.exports={
           var token_amount = othub_home.All.JobsReward24H;
           var holding_time = othub_home.All.JobsDuration24H;
           var data_size = othub_home.All.JobsSize24H;
-          var eth_create_gas = othub_home.Blockchains[1].Fees.JobCreationCost;
+          var eth_create_gas = othub_home.All.Blockchains[2].Fees.JobCreationCost;
           var eth_create_gas = Number(eth_create_gas);
 
-          var eth_final_gas = othub_home.Blockchains[1].Fees.JobFinalizedCost;
+          var eth_final_gas = othub_home.All.Blockchains[2].Fees.JobFinalizedCost;
           var eth_final_gas = Number(eth_final_gas);
 
           var total_eth_gas = eth_final_gas + eth_create_gas
@@ -301,10 +347,10 @@ module.exports={
           var token_amount = othub_home.All.JobsReward24H;
           var holding_time = othub_home.All.JobsDuration24H;
           var data_size = othub_home.All.JobsSize24H;
-          var xdai_create_gas = othub_home.Blockchains[0].Fees.JobCreationCost;
+          var xdai_create_gas = othub_home.All.Blockchains[1].Fees.JobCreationCost;
           var xdai_create_gas = Number(xdai_create_gas);
 
-          var xdai_final_gas = othub_home.Blockchains[0].Fees.JobFinalizedCost;
+          var xdai_final_gas = othub_home.All.Blockchains[1].Fees.JobFinalizedCost;
           var xdai_final_gas = Number(xdai_final_gas);
 
           var total_xdai_gas = xdai_final_gas + xdai_create_gas
@@ -315,6 +361,27 @@ module.exports={
           console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.        \x1b[35mHolding Time: \x1b[32m"+hold_time+" minute(s)");
           console.log('\x1b[35m', "Total Trac Cost: \x1b[32m"+token_amount+" xTrac       \x1b[35mTotal Trac Cost: \x1b[32m"+total_payment+" xTrac");
           console.log('\x1b[35m', "Creation Gas Cost: \x1b[32m"+xdai_create_gas+" xDai");
+          console.log(" ");
+        }
+
+        if(network == 'polygon:mainnet'){
+          var token_amount = othub_home.All.JobsReward24H;
+          var holding_time = othub_home.All.JobsDuration24H;
+          var data_size = othub_home.All.JobsSize24H;
+          var poly_create_gas = othub_home.All.Blockchains[0].Fees.JobCreationCost;
+          var poly_create_gas = Number(poly_create_gas);
+
+          var poly_final_gas = othub_home.All.Blockchains[0].Fees.JobFinalizedCost;
+          var poly_final_gas = Number(poly_final_gas);
+
+          var total_poly_gas = poly_final_gas + poly_create_gas
+          var payment_str = Number(payment_str);
+          var total_payment = payment_str * 3;
+
+          console.log('\x1b[35m', "Data Size:       \x1b[32m"+data_size+"B              \x1b[35mData Size: \x1b[32m"+file_size+"B");
+          console.log('\x1b[35m', "Holding Time:    \x1b[32m"+holding_time+" min.        \x1b[35mHolding Time: \x1b[32m"+hold_time+" minute(s)");
+          console.log('\x1b[35m', "Total Trac Cost: \x1b[32m"+token_amount+" xTrac       \x1b[35mTotal Trac Cost: \x1b[32m"+total_payment+" xTrac");
+          console.log('\x1b[35m', "Creation Gas Cost: \x1b[32m"+poly_create_gas+" xDai");
           console.log(" ");
         }
 
@@ -388,7 +455,7 @@ module.exports={
       var p2d = false;
 
       console.log("\x1b[35mPlease wait for the offer to begin...")
-  	  do {
+      do {
         var replicate_res = 'sudo docker exec otnode curl -X GET http://localhost:8900/api/latest/replicate/result/'+rep_handler_id+' -H "accept: application/json"'
         var replicate_res = await exec(replicate_res);
         var stdout = JSON.parse(replicate_res.stdout);
@@ -447,12 +514,155 @@ module.exports={
         }else{
           time++;
         }
-  			await snooze(10000);
-  	  }
-  	  while(!isFinished && time <= 600);
+        await snooze(10000);
+      }
+      while(!isFinished && time <= 600);
 
     }catch(e){
     console.log(e);
   }
-}
+},
+
+  created_jobs: async function option_2(){
+    try{
+      var info = "sudo docker exec otnode curl -s -X GET http://localhost:8900/api/latest/info?humanReadable=true"
+      var info = await exec(info);
+      var info = JSON.parse(info.stdout);
+
+      if (overlay_config.environment == 'mainnet'){
+        var jobs = 'sudo curl -X GET "https://v5api.othub.info/api/nodes/DataCreator/'+info.network.identity+'/Jobs" -H "accept: text/plain"'
+      }else{
+        var jobs = 'sudo curl -X GET "https://testnet-api.othub.info/api/nodes/DataCreator/'+info.network.identity+'/Jobs" -H "accept: text/plain"'
+      }
+
+      var jobs = await exec(jobs);
+      var jobs = JSON.parse(jobs.stdout);
+
+      console.log('\x1b[35m', "[1] - Not Started");
+      console.log('\x1b[35m', "[2] - Active");
+      console.log('\x1b[35m', "[3] - Completed");
+      console.log('\x1b[35m', "[0] - Return to main menu");
+      console.log('\x1b[35m', " ");
+      var response = await prompts({
+        type: 'text',
+        name: 'response',
+        message: '\x1b[35mWhat Job status are you looking for?'
+      });
+
+      if(response.response == '1'){
+        var status = 'Not Started'
+      }else if(response.response == '2'){
+        var status = 'Active'
+      }else if(response.response == '3'){
+        var status = 'Completed'
+      }else if(response.response == '0'){
+        module.exports.creators_menu();
+        return;
+      }
+
+      var job_count  = Object.keys(jobs).length;
+      var job_count = Number(job_count);
+
+      for(var i = 0; i < job_count; i++) {
+        var obj = Object.entries(jobs)[i];
+        var obj = obj[1];
+
+        if(status == 'Not Started' && obj.Status == 'Not Started'){
+          console.log('\x1b[35mStatus: \x1b[32m'+obj.Status)
+          console.log('\x1b[35mFinalized: \x1b[32m'+obj.IsFinalized)
+          console.log('\x1b[35mOffer ID: \x1b[32m'+obj.OfferId)
+          console.log('\x1b[35mCreated : \x1b[32m'+obj.CreatedTimestamp)
+          console.log('\x1b[35mFinished : \x1b[32m'+obj.FinalizedTimestamp)
+          console.log('\x1b[35mData Size: \x1b[32m'+obj.DataSetSizeInBytes+' B')
+          console.log('\x1b[35mHolding Time: \x1b[32m'+obj.HoldingTimeInMinutes+' minutes')
+          console.log('\x1b[35mTokens Paid per Holder: \x1b[32m'+obj.TokenAmountPerHolder+' Trac')
+          console.log('\x1b[35m==================================================================')
+          console.log(' ')
+        }else if(status == 'Active' && obj.Status == 'Active'){
+          console.log('\x1b[35mStatus: \x1b[32m'+obj.Status)
+          console.log('\x1b[35mFinalized: \x1b[32m'+obj.IsFinalized)
+          console.log('\x1b[35mOffer ID: \x1b[32m'+obj.OfferId)
+          console.log('\x1b[35mCreated : \x1b[32m'+obj.CreatedTimestamp)
+          console.log('\x1b[35mFinished : \x1b[32m'+obj.FinalizedTimestamp)
+          console.log('\x1b[35mData Size: \x1b[32m'+obj.DataSetSizeInBytes)
+          console.log('\x1b[35mHolding Time: \x1b[32m'+obj.HoldingTimeInMinutes+' minutes')
+          console.log('\x1b[35mTokens Paid per Holder: \x1b[32m'+obj.TokenAmountPerHolder+' Trac')
+          console.log('\x1b[35m==================================================================')
+          console.log(' ')
+        }else if(status == 'Completed' && obj.Status == 'Completed'){
+          console.log('\x1b[35mStatus: \x1b[32m'+obj.Status)
+          console.log('\x1b[35mFinalized: \x1b[32m'+obj.IsFinalized)
+          console.log('\x1b[35mOffer ID: \x1b[32m'+obj.OfferId)
+          console.log('\x1b[35mCreated : \x1b[32m'+obj.CreatedTimestamp)
+          console.log('\x1b[35mFinished : \x1b[32m'+obj.FinalizedTimestamp)
+          console.log('\x1b[35mData Size: \x1b[32m'+obj.DataSetSizeInBytes+' B')
+          console.log('\x1b[35mHolding Time: \x1b[32m'+obj.HoldingTimeInMinutes+' minutes')
+          console.log('\x1b[35mTokens Paid per Holder: \x1b[32m'+obj.TokenAmountPerHolder+' Trac')
+          console.log('\x1b[35m==================================================================')
+          console.log(' ')
+        }else{
+          //do nothing
+        }
+      }
+      module.exports.created_jobs();
+    }catch(e){
+      console.error('\x1b[31m',e);
+    }
+  },
+
+  export_data: async function export_data() {
+    try{
+      var response = await prompts({
+        type: 'text',
+        name: 'response',
+        message: '\x1b[35mPlease enter a valid offer id to export the dataset.'
+      });
+
+      if(overlay_config.environment == 'mainnet'){
+        var job_info = 'sudo curl -X GET "https://othub-api.origin-trail.network/api/Job/detail/'+response.response+'" -H  "accept: text/plain"'
+      }else{
+        var job_info = 'sudo curl -X GET "https://testnet-api.othub.info/api/Job/detail/'+response.response+'" -H  "accept: text/plain"'
+      }
+
+      var job_info = await exec(job_info);
+      var job_info = JSON.parse(job_info.stdout);
+      var dataset_id = job_info.DataSetId;
+      console.log("\x1b[35mYour dataset id is: \x1b[32m"+dataset_id);
+
+      var params = '{ "dataset_id": "'+job_info.DataSetId+'","standard_id": "OT-JSON"}'
+      var get_handler_id = "sudo docker exec otnode curl -s -X POST http://localhost:8900/api/latest/export -H 'accept: application/json' -H 'Content-Type: application/json' -d '"+params+"'"
+      var get_handler_id = await exec(get_handler_id);
+      var get_handler_id = JSON.parse(get_handler_id.stdout);
+      var export_handler_id = get_handler_id.handler_id;
+      console.log("\x1b[35mYour export handler id is: \x1b[32m"+export_handler_id)
+
+      var pending = true;
+      var time = 1;
+      const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  	  do {
+        var export_data = "sudo docker exec otnode curl -s -X GET http://localhost:8900/api/latest/export/result/"+export_handler_id+" -H 'accept: application/json'"
+        var export_data = await exec(export_data);
+        var export_data = JSON.parse(export_data.stdout);
+
+        if(export_data.status == "PENDING"){
+          time++;
+        }else if(export_data.status == "COMPLETED"){
+          console.log(JSON.parse(export_data.data.formatted_dataset));
+          time = 21;
+          pending = false;
+        }else{
+          console.log("\x1b[31mOops!");
+          time = 21;
+          pending = false;
+        }
+  			await snooze(2000);
+  	  }
+  	  while(pending && time <= 20);
+
+      module.exports.creators_menu();
+    }catch(e){
+      console.error('\x1b[31m',e);
+    }
+  }
 }

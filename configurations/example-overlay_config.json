@@ -27,7 +27,7 @@
               "header" : "Memory Leak"
             },
             "unhandled_rejection_detection":{
-              "enabled" : "true",
+              "enabled" : "false",
               "telegram_bot_token" : "*telegram bot token here*",
               "searchfor" : "'Unhandled Rejection'",
               "since" : "5m",
@@ -35,7 +35,7 @@
 
             },
             "timeout_detection":{
-              "enabled" : "true",
+              "enabled" : "false",
               "telegram_bot_token" : "*telegram bot token here*",
               "searchfor" : "'Timed out waiting for response'",
               "since" : "5m",

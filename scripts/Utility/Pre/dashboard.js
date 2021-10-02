@@ -10,16 +10,15 @@ module.exports={
       try {
         var balance = "sudo docker exec otnode curl -s -X GET http://localhost:8900/api/latest/balance?humanReadable=true"
         var balance = await exec(balance);
-        var balance = balance.stdout
-        var balance = JSON.parse(balance);
+        var balance = JSON.parse(balance.stdout);
 
         var info = "sudo docker exec otnode curl -s -X GET http://localhost:8900/api/latest/info?humanReadable=true"
         var info = await exec(info);
-        var info = info.stdout
-        var info = JSON.parse(info);
+        var info = JSON.parse(info.stdout);
 
         var chain_count  = Object.keys(balance).length;
         var chain_count = Number(chain_count);
+
         console.log(" ")
         console.log("\x1b[35m  Graph Size:     \x1b[35mNumber of Edges: \x1b[32m"+info.graph_size.number_of_edges+"      \x1b[35mNumber of Vertices: \x1b[32m"+info.graph_size.number_of_vertices)
         console.log("_________________________________________________________________________")
@@ -39,7 +38,7 @@ module.exports={
         }
 
     }catch(e){
-      console.log('\x1b[34m Unable to display dashboard at this time.. The node is probably reconnecting the network.','\n')
+      console.log('\x1b[34m Unable to display dashboard at this time. The node is probably reconnecting the network. Try again after a minute.','\n')
       //console.log(e);
     }
   }
