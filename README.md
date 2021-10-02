@@ -35,7 +35,7 @@ Telegram chat ID: add @myidbot to telegram. Type /start. It will tell you your c
 Operational wallet must have the following funds for EACH blockchain they are utilizing on their node:
   <ul>
   <li>Ethereum Blockchain: 3k TRAC and enough ETH to pay for 2 blockchain transactions</li>
-  <li>Starfleet Blockchain: 3k sTRAC and enough sTRAC to pay for 2 blockchain transactions</li>
+  <li>Polygon Blockchain: 3k polygon TRAC and enough polygon to pay for 2 blockchain transactions</li>
   <li>xDai Blockchain: 3k xTRAC and enough xDai to pay for 2 blockchain transactions</li>
   <li>Rinkeby Blockchain: 3k aTRAC and enough rinkeby ETH to pay for 2 blockchain transactions on <b>2</b> different operational wallets</li>
   </ul>
