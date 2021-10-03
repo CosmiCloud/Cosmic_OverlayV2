@@ -170,7 +170,7 @@ module.exports={
               console.log('\x1b[33m',result.stdout);
 
             }else{
-              console.log('\x1b[35m','Skipped payout for offer '+jerbs[i].OfferId+' on '+blockchain+'.')
+              //console.log('\x1b[35m','Skipped payout for offer '+jerbs[i].OfferId+' on '+blockchain+'.')
             }
           }
           await module.exports.controls_menu();
