@@ -150,21 +150,21 @@ module.exports={
           for(var i = 0; i < (jerbs.length); i++) {
             if(jerbs[i].BlockchainID == "1" && blockchain == 'Ethereum' && jerbs[i].Paidout == false){
               var offer_id = jerbs[i].OfferId
-              var payout_com = "sudo curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
+              var payout_com = "sudo docker exec otnode curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
               var result = await exec(payout_com);
               console.log('\x1b[32m','Triggered eth payout for offer '+jerbs[i].OfferId);
               console.log('\x1b[33m',result.stdout);
 
             }else if(jerbs[i].BlockchainID == "2" && blockchain == 'xDai' && jerbs[i].Paidout == false){
               var offer_id = jerbs[i].OfferId
-              var payout_com = "sudo curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
+              var payout_com = "sudo docker exec otnode curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
               var result = await exec(payout_com);
               console.log('\x1b[32m','Triggered xdai payout for offer '+jerbs[i].OfferId);
               console.log('\x1b[33m',result.stdout);
 
             }else if(jerbs[i].BlockchainID == "3" && blockchain == 'Polygon' && jerbs[i].Paidout == false){
               var offer_id = jerbs[i].OfferId
-              var payout_com = "sudo curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
+              var payout_com = "sudo docker exec otnode curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
               var result = await exec(payout_com);
               console.log('\x1b[32m','Triggered polygon payout for offer '+jerbs[i].OfferId);
               console.log('\x1b[33m',result.stdout);
