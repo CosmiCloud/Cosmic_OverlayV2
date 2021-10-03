@@ -106,7 +106,7 @@ module.exports={
         var info = await exec(info);
         var info = JSON.parse(info.stdout);
 
-        var jerbs = "sudo curl -X GET https://v5api.othub.info/api/nodes/DataHolder/"+info.network.identity+"/jobs"
+        var jerbs = "sudo curl -X GET https://v5api.othub.info/api/nodes/DataHolder/"+info.network.contact.identity+"/jobs"
         var jerbs = await exec(jerbs);
         var jerbs = JSON.parse(jerbs.stdout);
 
