@@ -13,8 +13,9 @@ module.exports={
         console.log('\x1b[35m', "[1] - Start node");
         console.log('\x1b[35m', "[2] - Stop node");
         console.log('\x1b[35m', "[3] - Restart node");
-        console.log('\x1b[35m', "[4] - Display node credentials");
-        console.log('\x1b[35m'," [0] - Return to main menu",'\n');
+        console.log('\x1b[35m', "[4] - Partial Pay All Jobs");
+        console.log('\x1b[35m', "[5] - Display node credentials");
+        console.log('\x1b[35m', "[0] - Return to main menu",'\n');
 
         const response = await prompts({
           type: 'text',
@@ -32,6 +33,9 @@ module.exports={
           module.exports.restart_node();
 
         }else if(response.response == '4'){
+          module.exports.payout();
+
+        }else if(response.response == '5'){
           module.exports.credentials();
 
         }else if(response.response == '0'){
@@ -95,7 +99,95 @@ module.exports={
     }
   },
 
-  credentials: async function option_4(){
+  payout: async function option_4(){
+    try{
+      if(overlay_config.environment == 'mainnet'){
+        var info = "sudo docker exec otnode curl -s -X GET http://localhost:8900/api/latest/info?humanReadable=true"
+        var info = await exec(info);
+        var info = JSON.parse(info.stdout);
+
+        var jerbs = "sudo curl -X GET https://v5api.othub.info/api/nodes/DataHolder/"+info.network.identity+"/jobs"
+        var jerbs = await exec(jerbs);
+        var jerbs = JSON.parse(jerbs.stdout);
+
+        console.log('\x1b[35m', "[1] - Ethereum");
+        console.log('\x1b[35m', "[2] - xDai");
+        console.log('\x1b[35m', "[3] - Polygon");
+        console.log('\x1b[35m', "[0] - Return to main menu",'\n');
+
+        var response = await prompts({
+          type: 'text',
+          name: 'response',
+          message: '\x1b[35mWhat blockchain would you like to partial pay all jobs from?'
+        });
+
+        if(response.response == '1'){
+          var blockchain = 'Ethereum'
+
+        }else if(response.response == '2'){
+          var blockchain = 'xDai'
+
+        }else if(response.response == '3'){
+          var blockchain = 'Polygon'
+
+        }else if(response.response == '0'){
+          const overlay = require('../start_overlay.js');
+          overlay.menu();
+
+        }else{
+          const overlay = require('../start_overlay.js');
+          console.log('\x1b[31m',"Exited Install Menu.");
+          overlay.menu();
+        }
+
+        var response = await prompts({
+          type: 'text',
+          name: 'response',
+          message: '\x1b[35mAre you sure you want to partial payout all jobs on '+blockchain+'? \x1b[31mThis will cost gas FOR EACH job getting paid out.(y/n)'
+        });
+
+        if(response.response == 'y' || response.response == 'yes'){
+          for(var i = 0; i < (jerbs.length); i++) {
+            if(jerbs[i].BlockchainID == "1" && blockchain == 'Ethereum' && jerbs[i].Paidout == false){
+              var offer_id = jerbs[i].OfferId
+              var payout_com = "curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
+              var result = await exec(payout_com);
+              console.log('\x1b[32m','Triggered eth payout for offer '+jerbs[i].OfferId);
+              console.log('\x1b[33m',result.stdout);
+
+            }else if(jerbs[i].BlockchainID == "2" && blockchain == 'xDai' && jerbs[i].Paidout == false){
+              var offer_id = jerbs[i].OfferId
+              var payout_com = "curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
+              var result = await exec(payout_com);
+              console.log('\x1b[32m','Triggered xdai payout for offer '+jerbs[i].OfferId);
+              console.log('\x1b[33m',result.stdout);
+
+            }else if(jerbs[i].BlockchainID == "3" && blockchain == 'Polygon' && jerbs[i].Paidout == false){
+              var offer_id = jerbs[i].OfferId
+              var payout_com = "curl -s -X GET http://127.0.0.1:8900/api/latest/payout?offer_id="+offer_id
+              var result = await exec(payout_com);
+              console.log('\x1b[32m','Triggered polygon payout for offer '+jerbs[i].OfferId);
+              console.log('\x1b[33m',result.stdout);
+
+            }else{
+              console.log('\x1b[35m','Skipped payout for offer '+jerbs[i].OfferId+' on '+blockchain+'.')
+            }
+            await module.exports.controls_menu();
+          }
+        }else{
+          console.log('\x1b[31m',"Exited Payout Menu.");
+          await module.exports.controls_menu();
+        }
+      }else{
+        console.log('\x1b[33m','Partial payouts are only offered on mainnet. Sorry!')
+        await module.exports.controls_menu();
+      }
+    }catch(e){
+      console.log('\x1b[31m',e);
+    }
+  },
+
+  credentials: async function option_5(){
     try{
       console.log('\x1b[35m',"Presenting node credentials...",'\n');
       var rinkeby_identity = 'echo $(sudo docker exec otnode cat /ot-node/data/rinkeby_identity.json)'
