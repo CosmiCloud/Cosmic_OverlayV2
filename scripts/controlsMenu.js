@@ -172,8 +172,8 @@ module.exports={
             }else{
               console.log('\x1b[35m','Skipped payout for offer '+jerbs[i].OfferId+' on '+blockchain+'.')
             }
-            await module.exports.controls_menu();
           }
+          await module.exports.controls_menu();
         }else{
           console.log('\x1b[31m',"Exited Payout Menu.");
           await module.exports.controls_menu();
