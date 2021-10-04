@@ -43,7 +43,7 @@
   	"replicated_pruning_delay_in_minutes": 1440,
   	"low_estimated_value_datasets":{
 	      "enabled": true,
-	      "minimum_free_space_percentage": 30
+	      "minimum_free_space_percentage": 60
 	    }
   	},
 	"autoUpdater": {
