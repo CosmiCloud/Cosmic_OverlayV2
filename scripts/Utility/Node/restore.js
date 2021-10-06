@@ -56,13 +56,13 @@ module.exports ={
 
       if(overlay_config.environment == 'development'){
         var restore =  "sudo /root/OTRestore/restore.sh --environment=development --backupDir=/root/OTawsbackup"
-        var image =  'sudo docker create --log-driver json-file --log-opt max-size=1g --name=otnode --hostname='+node_config.network.hostname+' -p 8900:8900 -p 5278:5278 -p 3000:3000 -e LOGS_LEVEL_DEBUG=1 -e SEND_LOGS=1 -v ~/certs/:/ot-node/certs/ -v ~/.origintrail_noderc:/ot-node/.origintrail_noderc quay.io/origintrail/otnode-test:feature_blockchain-service'
+        var image =  'sudo docker create --log-driver json-file --log-opt max-size=50m --name=otnode --hostname='+node_config.network.hostname+' -p 8900:8900 -p 5278:5278 -p 3000:3000 -e LOGS_LEVEL_DEBUG=1 -e SEND_LOGS=1 -v ~/certs/:/ot-node/certs/ -v ~/.origintrail_noderc:/ot-node/.origintrail_noderc quay.io/origintrail/otnode-test:feature_blockchain-service'
       }else if(overlay_config.environment == 'testnet'){
         var restore =  "sudo /root/OTRestore/restore.sh --backupDir=/root/OTawsbackup"
-        var image =  'sudo docker create --log-driver json-file --log-opt max-size=1g --name=otnode -p 8900:8900 -p 5278:5278 -p 3000:3000 -v ~/.origintrail_noderc:/ot-node/.origintrail_noderc origintrail/ot-node:release_testnet'
+        var image =  'sudo docker create --log-driver json-file --log-opt max-size=50m --name=otnode -p 8900:8900 -p 5278:5278 -p 3000:3000 -v ~/.origintrail_noderc:/ot-node/.origintrail_noderc origintrail/ot-node:release_testnet'
       }else if(overlay_config.environment == 'mainnet'){
         var restore =  "sudo /root/OTRestore/restore.sh --backupDir=/root/OTawsbackup"
-        var image =  'sudo docker create --log-driver json-file --log-opt max-size=1g --name=otnode -p 8900:8900 -p 5278:5278 -p 3000:3000 -v ~/.origintrail_noderc:/ot-node/.origintrail_noderc origintrail/ot-node:release_mainnet'
+        var image =  'sudo docker create --log-driver json-file --log-opt max-size=50m --name=otnode -p 8900:8900 -p 5278:5278 -p 3000:3000 -v ~/.origintrail_noderc:/ot-node/.origintrail_noderc origintrail/ot-node:release_mainnet'
       }
 
       console.log('\x1b[33m',"#################################### WARNING ################################");

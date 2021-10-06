@@ -121,6 +121,7 @@ module.exports = {
         }
     }catch(e){
       console.log('\x1b[31m',e);
+      return;
     }
   },
 

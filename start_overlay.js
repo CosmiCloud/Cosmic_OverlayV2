@@ -8,7 +8,7 @@ const dashboard = require('./scripts/Utility/Pre/dashboard.js');
 const installMenu = require('./scripts/installMenu.js');
 const backupMenu = require('./scripts/backupMenu.js');
 const scriptsMenu = require('./scripts/scriptsMenu.js');
-const logMenu = require('./scripts/logMenu.js');
+const utilityMenu = require('./scripts/utilityMenu.js');
 const controlsMenu = require('./scripts/controlsMenu.js');
 const creatorsMenu = require('./scripts/creatorsMenu.js');
 
@@ -40,9 +40,9 @@ module.exports ={
   		console.log('\x1b[35m',"[1] - Install Menu");
   		console.log('\x1b[35m',"[2] - Back Up Menu");
   		console.log('\x1b[35m',"[3] - Scripts Menu");
-  		console.log('\x1b[35m',"[4] - Log Menu");
-  		console.log('\x1b[35m',"[5] - Node Controls");
-      console.log('\x1b[35m',"[6] - Creators Menu");
+  		console.log('\x1b[35m',"[4] - Utility Menu");
+  		console.log('\x1b[35m',"[5] - Creators Menu");
+      console.log('\x1b[35m',"[6] - Node Controls");
       console.log('\x1b[35m',"[0] - Exit",'\n');
       console.log('\x1b[35m',"[R] - Refresh Dashboard");
 
@@ -62,13 +62,13 @@ module.exports ={
             await scriptsMenu.scripts_menu();
 
           }else if(response.response == '4'){
-            await logMenu.log_menu();
+            await utilityMenu.utility_menu();
 
           }else if(response.response == '5'){
-            await controlsMenu.controls_menu();
+            await creatorsMenu.creators_menu();
 
           }else if(response.response == '6'){
-            await creatorsMenu.creators_menu();
+            await controlsMenu.controls_menu();
 
           }else if(response.response == '0'){
             console.log('\x1b[31m',"Exited Main Menu.");
