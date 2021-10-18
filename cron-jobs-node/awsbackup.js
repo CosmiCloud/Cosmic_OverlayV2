@@ -14,3 +14,15 @@ cron.schedule(config.scripts.aws_backup.frequency,function(){
     }
   }
 })
+
+cron.schedule('0 19 * * *',function(){
+  if(config.scripts.aws_backup.enabled == "true"){
+    console.log('cron-jobs-node/awsbackup.js: Attempting to trigger AWS restic backup...');
+    var command = "cd ../scripts/OTUpload && sudo node restic_cleanup.js";
+    if(shell.exec(command).code !== 0){
+      console.log('cron-jobs-node/awsbackup.js: Failed to AWS backup.');
+    }else{
+      console.log('cron-jobs-node/awsbackup.js: AWS backup completed.');
+    }
+  }
+})

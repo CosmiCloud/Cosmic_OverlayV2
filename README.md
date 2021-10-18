@@ -1,21 +1,20 @@
-# Cosmic_Overlay V2 - OriginTrail v5 Multichain Supported!
+# Cosmic Overlay - An OriginTrail DKG Node GUI
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-The Cosmic Overlay provides a streamlined interface to lower the knoweldge barrier when running on Origintrail Node including automated maintenance tasks, node and staking reports, log notifications, and aws back ups and more. The overlay assumes your container and node configuration names are the defaults established by Trace Labs.  <b>Supports V5 Testnet and Mainnet</b>
+The Cosmic Overlay provides a streamlined interface to lower the knowledge barrier when running an Origintrail DKG Node: https://github.com/OriginTrail/ot-node.
 <br><br>
-Before running the overlay, please read and follow the requirements and configuration sections.
-<br>
-<br>
-<b>To Start Run:</b>
-<ol>
-<li>cd Cosmic_OverlayV2</li>
-<li>sudo node start_overlay.js</li>
-</ol>
-This project is independently maintained and is not affiliated with TraceLabs or OriginTrail.<br>
+Out of the box the overlay offers a staking dashboard, install/restore shortcuts, automated restic backups to AWS, telegram log alerts, job creation shortcuts, and more. The overlay assumes your container and node configuration names are the defaults established by Trace Labs.  <b>Supports V5 Testnet and Mainnet</b>
+<br><br>
+Before starting the overlay, please read and follow the requirements and configuration sections located below.
+<br><br>
+This project is independently maintained and is not affiliated with TraceLabs or OriginTrail.
+<br><br>
+<a href="https://ibb.co/pZP2Hff"><img src="https://i.ibb.co/pZP2Hff/mainmenu.png" alt="mainmenu" border="0"></a>
+<br><br>
 
 <b>--------------------------------------------------------------Requirements:--------------------------------------------------------------------</b>
-
-Install nodejs, npm, jq, curl, docker, and zip
+Install nodejs, npm, jq, curl, docker, zip, and restic if they are not already installed.
 <ul>
+<li>Run: sudo apt update -y && sudo apt upgrade -y</li>
 <li>Run: sudo apt install nodejs -y</li>
 <li>Run: sudo apt install npm -y</li>
 <li>Run: sudo apt install jq -y</li>
@@ -38,6 +37,7 @@ Operational wallet must have the following funds for EACH blockchain they are ut
   <li>Rinkeby Blockchain: 3k aTRAC and enough rinkeby ETH to pay for 2 blockchain transactions on <b>2</b> different operational wallets</li>
   </ul>
 <br>
+<br>
 <b>Required for aws s3 features:</b><br>
 Create an https://aws.amazon.com/s3/ account and create a new api access key and secret if you want to configure the overlay to interact with aws s3 storage.
 <br><br>
@@ -48,73 +48,64 @@ Create an https://aws.amazon.com/s3/ account and create a new api access key and
 <b>-----------------------------------------------------------Configuration:------------------------------------------------------------</b>
 
 <ol>
-<li>Open terminal</li>
-<li>Run: sudo apt update -y && sudo apt upgrade -y</li>
 <li>Run: sudo git clone https://github.com/CosmiCloud/Cosmic_OverlayV2.git</li>
+<li>Run: sudo cd Cosmic_OverlayV2/cron-jobs-node</li>
+<li>Run: sudo npm i shelljs</li>
+<li>Run: sudo npm i express</li>
+<li>Run: sudo npm i node-cron</li>
+<li>Run: sudo npm i forever -g</li>
+<li>Run: cd</li>
 </ol>
 <br>
 
 <b>Configuring your node</b>
 <ol>
 <li>Run: cd Cosmic_OverlayV2/configurations</li>
-<li>Rename the example-node_config.json (or tstexample-node_config.json for testnet) file in this directory to node_config.json. Replace the ** content with your information. <b> MAKE SURE TO REMOVE ANY BLOCKCHAIN IMPLEMENTATION YOU ARENT STAKING ON. FOR EXAMPLE, REMOVE ETHEREUM IF YOU ARE ONLY RUNNING ON XDAI.</b><br>
-  Note: This configuration should match the .origintrail_noderc file of your actual node. It is required to fill this configuration out for the overlay to function. You cannot change the default directories at this time.
+<li>If you are running testnet, Run: sudo cp tstexample-node_config.json node_config.json</li>
+<li>If you are running mainnet, Run: sudo cp tstexample-node_config.json node_config.json</li>
+<li>Run: sudo nano node_config.json</li>
+<li>Replace the ** content with your information. <b> MAKE SURE TO REMOVE ANY BLOCKCHAIN IMPLEMENTATION YOU ARENT STAKING ON. FOR EXAMPLE, REMOVE ETHEREUM IF YOU ARE ONLY RUNNING ON XDAI. Don't mess up the formatting.</b><br>
+  Note: This configuration should match the .origintrail_noderc file of your actual node if you already have an existing node. It is required to fill this configuration out for the start and restart overlay options to function. You cannot change the default directories at this time.
 </li>
+<li>Run: cd</li>
 </ol>
 
 <b>Configuring your overlay</b>
 <ol>
 <li>Run: cd Cosmic_OverlayV2/configurations</li>
-<li>Rename the example-overlay_config.json file in this directory to overlay_config.json. Replace the ** content with your information. Make sure to change the environment to mainnet if you want to run on mainnet.<br>
-  Note: It is required to fill this configuration out for the overlay to function. Misconfiguration could cause some features to fail.
+<li>Run: sudo cp example-overlay_config.json overlay_config.json</li>
+<li>Replace the ** content with your information. Make sure to change the environment to mainnet if you want to run on mainnet.<br>
+  Note: It is required to fill this configuration out for the overlay to function. Misconfiguration could cause some features to fail. You can add custom log notifications by adding an additional json block to the notifications object. You can use a different or the same bot token for each different notification.
 </li>
+<li>Run: cd</li>
 </ol>
 
-<b>Optional: If don't want to set up cronjobs on your crontab</b>
-<ol>
-<li>Run: cd Cosmic_OverlayV2/cron-jobs-node</li>
-<li>Run: sudo npm i shelljs</li>
-<li>Run: sudo npm i express</li>
-<li>Run: sudo npm i node-cron</li>
-<li>Run: sudo npm i forever -g</li>
-<li>Run: cd ..</li>
-</ol>
-<br>
-You can run sudo forever list to view the running porcess that automate the scripts. Sudo nano into the respective log file to find time stamped logs of script processes or errors if your scripts are not working.<br>
-<b>----------------------------------------------------------------Features:------------------------------------------------------------------</b><br><br>
-<a href="https://ibb.co/p29syCD"><img src="https://i.ibb.co/rk1LsnP/IMG-20210325-090642-421.jpg" alt="IMG-20210325-090642-421" border="0"/></a><br><br>
-<br>
-At any point you can hit any key NOT listed as a menu item to exit the overlay.
-<br>
-<b>Install Menu:</b>
-<ol>
-<li>Install a brand new node based off of the configuration in the overlay config. <br>
-Note: This will not let start a node if otnode already exists.</li>
-<li>Restore directly from configured aws directory.<br>
-Note: This will not let start a node if otnode already exists or if nothing was downloaded from aws (incorrect config)</li>
-<li>Restore directly from a local backup.<br>
-Note: This will not let start a node if otnode already exists.</li>
-</ol><br>
+<a href="https://ibb.co/zF7KrFN"><img src="https://i.ibb.co/zF7KrFN/installmenu.png" alt="installmenu" border="0"></a><br>
+<ul>
+<li>Install a brand new node based off of the configuration in the overlay config</li>
+<li>Restore directly from configured aws directory</li>
+<li>Restore directly from a local backup</li><br>
+</ul><br>
 
-<b>Backup Menu:</b>
-<ol>
-<li>Creates a local back up file on the directory.</li>
-<li>Creates back up file and pushes it to configured aws bucket.</li>
-<li>Removes local backups.</li>
-</ol><br>
+<a href="https://ibb.co/SvJzrf3"><img src="https://i.ibb.co/SvJzrf3/backupmenu.png" alt="backupmenu" border="0"></a><br>
+<ul>
+<li>Creates a local back up file on the directory</li>
+<li>Creates complete back up file and pushes it to configured aws bucket. Not a restic upload</li>
+<li>Removes local backups</li>
+</ul><br>
 
-<b>Scripts Menu:</b><br>
-The menu will display current enabled automations scripts and give you the below commands
-<ol>
+<a href="https://ibb.co/MpP0zR5"><img src="https://i.ibb.co/MpP0zR5/scriptsmenu.png" alt="scriptsmenu" border="0"></a>
+<ul>
 <li>Start scripts. <br>
-Note: This will activate your enabled scripts.</li>
+Note: This will activate your enabled scripts</li>
 <li>Stop scripts. <br>
-Note: This will deactivate your enabled scripts.</li>
-<li>Stop scripts. <br>
+Note: This will deactivate your enabled scripts</li>
+<li>Stop scripts<br>
 Note: This will restart your scripts so any config changes will be picked up.</li>
-</ol><br>
+</ul><br>
+You can run sudo forever list to view the running porcess that automate the scripts. Sudo nano into the respective log file to find time stamped logs of script processes or errors if your scripts are not working.<br>
 
-<b>Log Menu:</b>
+<a href="https://ibb.co/C7QxtB9"><img src="https://i.ibb.co/C7QxtB9/utilitymenu.png" alt="utilitymenu" border="0"></a>
 <ol>
 <li>Display logs.</li>
 <li>Archive logs. <br>
@@ -125,17 +116,7 @@ Note: This will display log file location and size.</li>
 <li>Delete log archives.</li>
 </ol><br>
 
-<b>Node Controls:</b>
-<ol>
-<li>Start node.</li>
-<li>Stop node.</li>
-<li>Restart node.</li>
-<li>Display node credentials. <br>
-Note: If they exist, this will display rinkeby identity, starfleet identity, xDai identity, erc725 id, your node identity, and your houston password.
-</li>
-</ol><br>
-
-<b>Data Creator Menu:</b>
+<a href="https://ibb.co/6H2p8Ht"><img src="https://i.ibb.co/6H2p8Ht/creatorsmenu.png" alt="creatorsmenu" border="0"></a>
 <ol>
 <li>Create a Job<br>
 Note: This feature pushes data from a local directory onto the ODN in the form of an offer/job. A dummy data file is provided and used if you create a job only using the defaults.<br>
@@ -143,6 +124,16 @@ This is for more advanced users. DO NOT use this feature if you do not want to p
 </li>
 <li>View Created Jobs<br>
 Note: This opens a sub menu that allows you to return All, Active, Completed, and Not Started offer statuses.
+</li>
+</ol><br>
+
+<a href="https://ibb.co/Yk7r0mX"><img src="https://i.ibb.co/Yk7r0mX/controlsmenu.png" alt="controlsmenu" border="0"></a>
+<ol>
+<li>Start node.</li>
+<li>Stop node</li>
+<li>Restart node</li>
+<li>Display node credentials <br>
+Note: If they exist, this will display rinkeby identity, polkadot identity, xDai identity, erc725 id, your node identity, and your houston password.
 </li>
 </ol><br>
 

@@ -45,9 +45,9 @@ module.exports={
           console.log('\x1b[35m', "Automated Log Archiving: ",'\x1b[31m', "           [Disabled]");
         }
         if(aws_backup == 'true'){
-          console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[32m', "             [Enabled]");
+          console.log('\x1b[35m', "Automated AWS Restic Backups: ",'\x1b[32m', "      [Enabled]");
         }else{
-          console.log('\x1b[35m', "Automated AWS Backups: ",'\x1b[31m', "             [Disabled]");
+          console.log('\x1b[35m', "Automated AWS Restic Backups: ",'\x1b[31m', "      [Disabled]");
         }
         if(report == 'true'){
           console.log('\x1b[35m', "Daily Reports: ",'\x1b[32m', "                     [Enabled]");
@@ -55,9 +55,9 @@ module.exports={
           console.log('\x1b[35m', "Daily Reports: ",'\x1b[31m', "                     [Disabled]");
         }
         if(create_aws_job == 'true'){
-          console.log('\x1b[35m', "Scheduled AWS to ODN Uplaods: ",'\x1b[32m', "      [Enabled]");
+          console.log('\x1b[35m', "Scheduled AWS to ODN Uploads: ",'\x1b[32m', "      [Enabled]");
         }else{
-          console.log('\x1b[35m', "Scheduled AWS to ODN Uplaods: ",'\x1b[31m', "      [Disabled]");
+          console.log('\x1b[35m', "Scheduled AWS to ODN Uploads: ",'\x1b[31m', "      [Disabled]");
         }
         console.log(" ");
         console.log('\x1b[35m', "[1] - Start maintenance scripts");

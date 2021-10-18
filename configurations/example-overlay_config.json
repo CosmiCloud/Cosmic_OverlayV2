@@ -7,7 +7,7 @@
         "aws_access_key_id" : "*aws key id here*",
         "aws_secret_access_key" : "*aws secret access key here*",
         "aws_bucket_name" : "*aws bucket here*",
-        "s3_url_of_backup" : "*example* bucket/path/otnode_47.XXX.XXX.XX/2021-02-16T16:06:16.216Z/",
+        "restic_password" : "*password here*",
         "log_notifications" :{
           "enabled" : "true",
           "frequency" : "*/5 * * * *",

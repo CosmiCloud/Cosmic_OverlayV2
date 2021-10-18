@@ -13,11 +13,10 @@ module.exports={
     //prechecks for docker and jq
     backup_menu: async function menu(){
       try {
-        console.log('\n','\x1b[35m',"What would you like to do?");
         console.log('\x1b[35m',"[1] - Create a local backup file");
         console.log('\x1b[35m',"[2] - Create a backup file and upload it to AWS bucket: "+awsbucket);
         console.log('\x1b[35m',"[3] - Delete local backups in /root/OTBackup");
-        console.log('\x1b[35m',"[0] - Return to main menu");
+        console.log('\x1b[35m',"[0] - Return to main menu",'\n');
 
         const response = await prompts({
           type: 'text',
@@ -111,11 +110,11 @@ module.exports={
 
   cleanbackups: async function option_3(){
     try{
-      console.log('\x1b[35m',"Deleting node backups in /root/OTBackups/backup/* ...");
-      var cleanbackups = 'sudo rm -rf /root/OTBackups/backup/*'
+      console.log('\x1b[35m',"Deleting node backups in /root/OTBackups/* ...");
+      var cleanbackups = 'sudo rm -rf /root/OTBackups/*'
       await exec(cleanbackups);
 
-      var displaybackups = 'sudo ls /root/OTBackups/backup'
+      var displaybackups = 'sudo ls /root/OTBackups/'
       const { stdout, stderr } = await exec(displaybackups);
 
       console.log('\x1b[35m',"Backups have been deleted.");
