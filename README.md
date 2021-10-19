@@ -63,7 +63,7 @@ Create an https://aws.amazon.com/s3/ account and create a new api access key and
 <ol>
 <li>Run: cd Cosmic_OverlayV2/configurations</li>
 <li>If you are running testnet, Run: sudo cp tstexample-node_config.json node_config.json</li>
-<li>If you are running mainnet, Run: sudo cp tstexample-node_config.json node_config.json</li>
+<li>If you are running mainnet, Run: sudo cp example-node_config.json node_config.json</li>
 <li>Run: sudo nano node_config.json</li>
 <li>Replace the ** content with your information. <b> MAKE SURE TO REMOVE ANY BLOCKCHAIN IMPLEMENTATION YOU ARENT STAKING ON. FOR EXAMPLE, REMOVE ETHEREUM IF YOU ARE ONLY RUNNING ON XDAI. Don't mess up the formatting.</b><br>
   Note: This configuration should match the .origintrail_noderc file of your actual node if you already have an existing node. It is required to fill this configuration out for the start and restart overlay options to function. You cannot change the default directories at this time.
