@@ -107,7 +107,7 @@
         "aws_backup":{
           "enabled" : "true",
           "telegram_bot_token" : "*telegram bot token here*",
-          "frequency" : "0 0 * * 0"
+          "frequency" : "0 */6 * * *
         },
         "heartbeat":{
           "enabled" : "true",
