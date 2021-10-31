@@ -124,7 +124,7 @@ module.exports={
 
   restart_scripts: async function option_3(){
     try{
-      var restart = 'cd ./cron-jobs-node && sudo forever restart notification.js && sudo forever restart archive.js && sudo forever restart awsbackup.js && sudo forever restart ping.js && sudo forever restart report.js && sudo forever restart awsjob.js'
+      var restart = 'cd ./cron-jobs-node && sudo forever restart notification.js && sudo forever restart archive.js && sudo forever restart awsbackup.js && sudo forever restart ping.js && sudo forever restart report.js'
       console.log('\x1b[35m',"Restarting scripts...");
       await exec(restart);
       console.log('\x1b[32m',"Scripts have restarted!");
