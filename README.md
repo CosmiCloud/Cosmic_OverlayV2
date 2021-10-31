@@ -79,6 +79,8 @@ Create an https://aws.amazon.com/s3/ account and create a new api access key and
   Note: It is required to fill this configuration out for the overlay to function. Misconfiguration could cause some features to fail. You can add custom log notifications by adding an additional json block to the notifications object. You can use a different or the same bot token for each different notification.
 </li>
 <li>Run: cd</li>
+<li>Run: cd Cosmic_OverlayV2</li>
+<li>Run: sudo node start_overlay.js</li>
 </ol>
 
 <a href="https://ibb.co/zF7KrFN"><img src="https://i.ibb.co/zF7KrFN/installmenu.png" alt="installmenu" border="0"></a><br>
