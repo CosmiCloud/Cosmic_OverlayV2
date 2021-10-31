@@ -49,7 +49,7 @@ Create an https://aws.amazon.com/s3/ account and create a new api access key and
 
 <ol>
 <li>Run: sudo git clone https://github.com/CosmiCloud/Cosmic_OverlayV2.git</li>
-<li>Run: sudo cd Cosmic_OverlayV2/cron-jobs-node</li>
+<li>Run: cd Cosmic_OverlayV2/cron-jobs-node</li>
 <li>Run: sudo npm i shelljs</li>
 <li>Run: sudo npm i express</li>
 <li>Run: sudo npm i node-cron</li>
