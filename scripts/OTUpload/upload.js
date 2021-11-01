@@ -49,6 +49,10 @@ async function upload(){
       console.log(date+' - scripts/upload.js: Writing password file in root');
       var data = fs.writeFileSync('/root/restic-password.txt', restic_password)
       await exec(restic);
+      
+      console.log(date+' - scripts/upload.js: Making restic exectuable');
+      var restic ='sudo chmod +x /root/Cosmic_OverlayV2/restic'
+      await exec(restic);
 
       console.log(date+' - scripts/upload.js: Initializing restic');
       var restic ='sudo /root/Cosmic_OverlayV2/restic -r s3:s3.amazonaws.com/'+awsbucket+' init -p /root/restic-password.txt -o s3.region='+aws_region
