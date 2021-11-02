@@ -70,17 +70,21 @@ async function upload(){
     var link_backup = 'sudo ln -sf "$(sudo docker inspect --format="{{.GraphDriver.Data.MergedDir}}" otnode)/ot-node/backup" /root/restic-backup/'
     await exec(link_backup);
     
-    console.log(date+' - scripts/upload.js: Removing backup on otnode container');
-    var del_bu = 'sudo docker exec otnode rm -rf /ot-node/backup'
-    exec(del_bu);
-    
     var asas = 'sudo ls /root/restic-backup/backup/*/'
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
 
     console.log(date+' - scripts/upload.js: Renaming backup');
-    var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
-    await exec(rename);
+    //var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
+    //await exec(rename);
+    
+    var oldPath = '/root/restic-backup/backup/202*/*
+    var newPath = '/root/restic-backup/ 2>&1'
+
+    await fs.rename(oldPath, newPath, function (err) {
+      if (err) throw err
+      console.log('Successfully renamed')
+    })
 
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
     var hid_data = 'sudo cp -r /root/restic-backup/backup/202*/.origintrail_noderc /root/restic-backup/ 2>&1'
@@ -109,6 +113,10 @@ async function upload(){
         console.log(date+' - scripts/upload.js: Removing backup used for upload');
         var del_bu = 'sudo rm -rf /root/restic-backup/*'
         exec(del_bu);
+        
+        console.log(date+' - scripts/upload.js: Removing existing backups in otnode container');
+        var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
+        await exec(backup);
       }
     });
     
