@@ -69,7 +69,11 @@ async function upload(){
     console.log(date+' - scripts/upload.js: Linking backup folder to docker container');
     var link_backup = 'sudo ln -sf "$(sudo docker inspect --format="{{.GraphDriver.Data.MergedDir}}" otnode)/ot-node/backup" /root/restic-backup/'
     await exec(link_backup);
-
+    
+    console.log(date+' - scripts/upload.js: Removing backup on otnode container');
+    var del_bu = 'sudo docker exec otnode rm -rf /ot-node/backup'
+    exec(del_bu);
+    
     var asas = 'sudo ls /root/restic-backup/backup/*/'
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
