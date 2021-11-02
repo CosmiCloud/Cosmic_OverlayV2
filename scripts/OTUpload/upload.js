@@ -116,7 +116,7 @@ async function upload(){
         
         console.log(date+' - scripts/upload.js: Removing existing backups in otnode container');
         var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
-        await exec(backup);
+        exec(backup);
       }
     });
     
