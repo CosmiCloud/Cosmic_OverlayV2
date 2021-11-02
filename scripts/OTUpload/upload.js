@@ -104,7 +104,15 @@ async function upload(){
         });
       }
     });
-
+  
+  console.log(date+' - scripts/upload.js: Removing backup used for upload');
+  var del_bu = 'sudo rm -rf /root/restic-backup/*'
+  await exec(del_bu);
+    
+  console.log(date+' - scripts/upload.js: Removing backup in docker container');
+  var del_bu = 'sudo docker exec -it otnode rm -rf /ot-node/backup'
+  await exec(del_bu);
+    
   }catch(e){
     client.sendMessage(chatId, node_name+ ' AWS upload failed: '+e, {
 
