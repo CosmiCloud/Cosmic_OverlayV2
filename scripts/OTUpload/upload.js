@@ -107,7 +107,7 @@ async function upload(){
         exec(del_bu);
 
         console.log(date+' - scripts/upload.js: Removing backup in docker container');
-        var del_bu = 'sudo docker exec -it otnode rm -rf /ot-node/backup'
+        var del_bu = 'sudo docker exec otnode rm -rf /ot-node/backup'
         exec(del_bu);
       }
     });
