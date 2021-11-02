@@ -75,7 +75,7 @@ async function upload(){
     console.log(date+' - '+asas.stdout);
 
     console.log(date+' - scripts/upload.js: Renaming backup');
-    var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
+    var rename = 'sudo mv /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
     await exec(rename);
 
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
@@ -104,10 +104,6 @@ async function upload(){
         
         console.log(date+' - scripts/upload.js: Removing backup used for upload');
         var del_bu = 'sudo rm -rf /root/restic-backup/*'
-        exec(del_bu);
-
-        console.log(date+' - scripts/upload.js: Removing backup in docker container');
-        var del_bu = 'sudo docker exec otnode rm -rf /ot-node/backup'
         exec(del_bu);
       }
     });
