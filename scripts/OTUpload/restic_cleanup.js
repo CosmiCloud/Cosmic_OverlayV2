@@ -44,7 +44,7 @@ module.exports={
             });
           }else{
             console.log(date+' - scripts/restic_cleanup.js: Snapshot command SUCCESSFUL');
-            client.sendMessage(chatId, node_name+ ' Forget snapshot command SUCCESSFUL. ', {
+            client.sendMessage(chatId, node_name+ ' Forget snapshot command SUCCESSFUL', {
               disableWebPagePreview: true,
               disableNotification: false,
             });
@@ -71,7 +71,7 @@ module.exports={
           });
         }else{
           console.log(date+' - scripts/restic_cleanup.js: Pruning command SUCCESSFUL');
-          client.sendMessage(chatId, node_name+ ' Pruning command SUCCESSFUL: '+stdout, {
+          client.sendMessage(chatId, node_name+ ' Pruning command SUCCESSFUL', {
             disableWebPagePreview: true,
             disableNotification: false,
           });
@@ -98,7 +98,7 @@ module.exports={
           });
         }else{
           console.log(date+' - scripts/restic_cleanup.js: Check command SUCCESSFUL');
-          client.sendMessage(chatId, node_name+ ' Check command SUCCESSFUL: '+stdout, {
+          client.sendMessage(chatId, node_name+ ' Check command SUCCESSFUL', {
             disableWebPagePreview: true,
             disableNotification: false,
           });
