@@ -78,7 +78,7 @@ async function upload(){
     //var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
     //await exec(rename);
     
-    var oldPath = '/root/restic-backup/backup/202*/*
+    var oldPath = '/root/restic-backup/backup/202*/*'
     var newPath = '/root/restic-backup/ 2>&1'
 
     await fs.rename(oldPath, newPath, function (err) {
