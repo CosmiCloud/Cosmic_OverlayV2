@@ -79,7 +79,7 @@ async function upload(){
     console.log(date+' - '+asas.stdout);
 
     console.log(date+' - scripts/upload.js: Renaming backup');
-    var rename = 'sudo mv /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
+    var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
     await exec(rename);
 
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
