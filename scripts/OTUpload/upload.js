@@ -11,7 +11,6 @@ const awsaccesskeyid = config.scripts.aws_access_key_id;
 const awssecretaccesskey = config.scripts.aws_secret_access_key;
 const restic_password = config.scripts.restic_password;
 const aws_region = config.scripts.aws_region;
-require('dotenv')
 const fs = require('fs');
 const dateFormat = require('dateformat');
 var date = dateFormat(new Date(), "yyyy-mm-dd-h:MM:ss");
