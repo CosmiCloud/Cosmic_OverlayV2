@@ -7,7 +7,7 @@ const s3_url_of_backup = config.scripts.s3_url_of_backup;
 module.exports = {
   s3download: async function s3dl(){
     try{
-      aws_dir = "sudo rm -rf /root/OTawsbackup && sudo mkdir -p /root/OTawsbackup"
+      aws_dir = "sudo mkdir -p /root/OTawsbackup"
       await exec(aws_dir);
 
       dl_s3 = "sudo aws s3 cp "+s3_url_of_backup+" /root/OTawsbackup --recursive"
