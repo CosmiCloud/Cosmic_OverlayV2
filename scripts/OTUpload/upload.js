@@ -74,17 +74,17 @@ async function upload(){
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
 
-    console.log(date+' - scripts/upload.js: Renaming backup');
+    //console.log(date+' - scripts/upload.js: Renaming backup');
     //var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
     //await exec(rename);
     
-    var oldPath = '/root/restic-backup/backup/202*/*'
-    var newPath = '/root/restic-backup/'
+    //var oldPath = '/root/restic-backup/backup/202*/*'
+    //var newPath = '/root/restic-backup/'
 
-    await fs.rename(oldPath, newPath, function (err) {
-      if (err) throw err
-      console.log('Successfully renamed')
-    })
+    //await fs.rename(oldPath, newPath, function (err) {
+      //if (err) throw err
+      //console.log('Successfully renamed')
+    //})
 
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
     var hid_data = 'sudo cp -r /root/restic-backup/backup/202*/.origintrail_noderc /root/restic-backup/ 2>&1'
