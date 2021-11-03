@@ -79,7 +79,7 @@ async function upload(){
     //await exec(rename);
     
     var oldPath = '/root/restic-backup/backup/202*/*'
-    var newPath = '/root/restic-backup/ 2>&1'
+    var newPath = '/root/restic-backup/'
 
     await fs.rename(oldPath, newPath, function (err) {
       if (err) throw err
