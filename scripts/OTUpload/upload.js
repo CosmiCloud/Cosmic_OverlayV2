@@ -74,18 +74,6 @@ async function upload(){
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
 
-    //console.log(date+' - scripts/upload.js: Renaming backup');
-    //var rename = 'sudo cp -r /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
-    //await exec(rename);
-    
-    //var oldPath = '/root/restic-backup/backup/202*/*'
-    //var newPath = '/root/restic-backup/'
-
-    //await fs.rename(oldPath, newPath, function (err) {
-      //if (err) throw err
-      //console.log('Successfully renamed')
-    //})
-
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
     var hid_data = 'sudo cp -r /root/restic-backup/backup/202*/.origintrail_noderc /root/restic-backup/ 2>&1'
     await exec(hid_data);
@@ -103,6 +91,15 @@ async function upload(){
           disableWebPagePreview: true,
           disableNotification: false,
         });
+        
+        console.log(date+' - scripts/upload.js: Removing backup used for upload');
+        var del_bu = 'sudo rm -rf /root/restic-backup/*'
+        exec(del_bu);
+        
+        console.log(date+' - scripts/upload.js: Removing existing backups in otnode container');
+        var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
+        exec(backup);
+        
       }else{
         console.log(date+' - scripts/upload.js: AWS upload has successfully triggered.');
         client.sendMessage(chatId, node_name+ ' Restic backup to AWS S3 SUCCESSFUL: '+stdout, {
