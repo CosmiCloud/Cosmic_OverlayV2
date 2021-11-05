@@ -33,18 +33,56 @@ async function upload(){
     process.env.AWS_ACCESS_KEY_ID = awsaccesskeyid
     process.env.AWS_SECRET_ACCESS_KEY = awssecretaccesskey
 
+    var dir = "/root/aws"
+    if(fs.existsSync(dir)){
+      console.log('AWS folder already exists in root, assumng aws cli v2 is  installed and configured.')
+    }else{
+      console.log('\x1b[35m',"Downloading aws cli v2...");
+      awsdl = 'sudo curl --silent "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /root/awscliv2.zip'
+      await exec(awsdl);
+      console.log('\x1b[32m',"Aws cli downloaded.",'\n');
+
+      rmaws = 'sudo rm -rf /root/aws'
+      await exec(rmaws);
+      //unzip download
+      console.log('\x1b[35m',"Extracting files...");
+      unzipaws = 'sudo unzip /root/awscliv2.zip -d /root/'
+      await exec(unzipaws,{maxBuffer: 1024 * 2000});
+      console.log('\x1b[32m',"aws cli v2 files extracted.",'\n');
+
+      rmawsz = 'sudo rm -rf /root/awscliv2.zip'
+      await exec(rmawsz);
+
+      console.log('\x1b[35m',"Installing aws cli v2...");
+      installaws = '/root/aws/install --update'
+      await exec(installaws);
+      console.log('\x1b[32m',"AWS cli v2 installed",'\n');
+
+      console.log('\x1b[35m',"Configuring aws cli v2...");
+      var region = 'sudo aws configure set region '+config.scripts.aws_region
+      await exec(region);
+
+      var accesskey = 'sudo aws configure set aws_access_key_id '+config.scripts.aws_access_key_id
+      await exec(accesskey);
+
+      var secretkey = 'sudo aws configure set aws_secret_access_key '+config.scripts.aws_secret_access_key
+      await exec(secretkey);
+
+      console.log('\x1b[32m',"AWS cli v2 configured.",'\n');
+    }
+
     var dir = "/root/restic-backup"
     if(fs.existsSync(dir)){
       console.log(date+' - scripts/upload.js: A restic-backup directory already exists.');
-      
+
       console.log(date+' - scripts/upload.js: Creating password file in root');
       var restic ='sudo touch /root/restic-password.txt'
       await exec(restic);
-      
+
       console.log(date+' - scripts/upload.js: Writing password file in root');
       var data = fs.writeFileSync('/root/restic-password.txt', restic_password)
       await exec(restic);
-      
+
     }else{
       console.log(date+' - scripts/upload.js: Creating /root/restic-backup');
       var restic ='sudo mkdir -p /root/restic-backup && sudo chmod -R 777 /root/restic-backup'
@@ -57,7 +95,7 @@ async function upload(){
       console.log(date+' - scripts/upload.js: Writing password file in root');
       var data = fs.writeFileSync('/root/restic-password.txt', restic_password)
       await exec(restic);
-      
+
       console.log(date+' - scripts/upload.js: Making restic exectuable');
       var restic ='sudo chmod +x /root/Cosmic_OverlayV2/restic'
       await exec(restic);
@@ -78,7 +116,7 @@ async function upload(){
     console.log(date+' - scripts/upload.js: Linking backup folder to docker container');
     var link_backup = 'sudo ln -sf "$(sudo docker inspect --format="{{.GraphDriver.Data.MergedDir}}" otnode)/ot-node/backup" /root/restic-backup/'
     await exec(link_backup);
-    
+
     var asas = 'sudo ls /root/restic-backup/backup/*/'
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
@@ -100,36 +138,36 @@ async function upload(){
           disableWebPagePreview: true,
           disableNotification: false,
         });
-        
+
         console.log(date+' - scripts/upload.js: Removing backup used for upload');
         var del_bu = 'sudo rm -rf /root/restic-backup'
         exec(del_bu);
-        
+
         console.log(date+' - scripts/upload.js: Removing existing backups in otnode container');
         var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
         exec(backup);
-        
+
         console.log(date+' - scripts/upload.js: Removing password file of failed upload');
         var rm_pwd = 'sudo rm -rf /root/restic-password.txt'
         exec(rm_pwd);
-        
+
       }else{
         console.log(date+' - scripts/upload.js: AWS upload has successfully triggered.');
         client.sendMessage(chatId, node_name+ ' Restic backup to AWS S3 SUCCESSFUL: '+stdout, {
           disableWebPagePreview: true,
           disableNotification: false,
         });
-        
+
         console.log(date+' - scripts/upload.js: Removing backup used for upload');
         var del_bu = 'sudo rm -rf /root/restic-backup/*'
         exec(del_bu);
-        
+
         console.log(date+' - scripts/upload.js: Removing existing backups in otnode container');
         var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
         exec(backup);
       }
     });
-    
+
   }catch(e){
     client.sendMessage(chatId, node_name+ ' AWS upload failed: '+e, {
 
