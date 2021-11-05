@@ -37,9 +37,14 @@ async function upload(){
     if(fs.existsSync(dir)){
       console.log(date+' - scripts/upload.js: A restic-backup directory already exists.');
       
+      console.log(date+' - scripts/upload.js: Creating password file in root');
+      var restic ='sudo touch /root/restic-password.txt'
+      await exec(restic);
+      
       console.log(date+' - scripts/upload.js: Writing password file in root');
       var data = fs.writeFileSync('/root/restic-password.txt', restic_password)
       await exec(restic);
+      
     }else{
       console.log(date+' - scripts/upload.js: Creating /root/restic-backup');
       var restic ='sudo mkdir -p /root/restic-backup && sudo chmod -R 777 /root/restic-backup'
