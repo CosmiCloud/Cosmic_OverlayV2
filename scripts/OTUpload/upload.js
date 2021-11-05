@@ -106,7 +106,7 @@ async function upload(){
         
         console.log(date+' - scripts/upload.js: Removing password file of failed upload');
         var rm_pwd = 'sudo rm -rf /root/restic-password.txt'
-        await exec(rm_pwd);
+        exec(rm_pwd);
         
       }else{
         console.log(date+' - scripts/upload.js: AWS upload has successfully triggered.');
