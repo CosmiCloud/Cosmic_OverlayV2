@@ -36,6 +36,10 @@ async function upload(){
     var dir = "/root/restic-backup"
     if(fs.existsSync(dir)){
       console.log(date+' - scripts/upload.js: A restic-backup directory already exists.');
+      
+      console.log(date+' - scripts/upload.js: Writing password file in root');
+      var data = fs.writeFileSync('/root/restic-password.txt', restic_password)
+      await exec(restic);
     }else{
       console.log(date+' - scripts/upload.js: Creating /root/restic-backup');
       var restic ='sudo mkdir -p /root/restic-backup && sudo chmod -R 777 /root/restic-backup'
@@ -100,6 +104,10 @@ async function upload(){
         var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
         exec(backup);
         
+        console.log(date+' - scripts/upload.js: Removing password file of failed upload');
+        var rm_pwd = 'sudo rm -rf /root/restic-password.txt'
+        await exec(rm_pwd);
+        
       }else{
         console.log(date+' - scripts/upload.js: AWS upload has successfully triggered.');
         client.sendMessage(chatId, node_name+ ' Restic backup to AWS S3 SUCCESSFUL: '+stdout, {
@@ -116,10 +124,6 @@ async function upload(){
         exec(backup);
       }
     });
-    
-    console.log(date+' - scripts/upload.js: Removing password file of failed upload');
-    var rm_pwd = 'sudo rm -rf /root/restic-password.txt'
-    await exec(rm_pwd);
     
   }catch(e){
     client.sendMessage(chatId, node_name+ ' AWS upload failed: '+e, {
