@@ -102,7 +102,7 @@ async function upload(){
         });
         
         console.log(date+' - scripts/upload.js: Removing backup used for upload');
-        var del_bu = 'sudo rm -rf /root/restic-backup/*'
+        var del_bu = 'sudo rm -rf /root/restic-backup'
         exec(del_bu);
         
         console.log(date+' - scripts/upload.js: Removing existing backups in otnode container');
@@ -131,10 +131,6 @@ async function upload(){
     });
     
   }catch(e){
-    console.log(date+' - scripts/upload.js: Removing empty backup folder');
-    var del_bu = 'sudo rm -rf /root/restic-backup/backup 2>&1'
-    await exec(del_bu);
-    
     client.sendMessage(chatId, node_name+ ' AWS upload failed: '+e, {
 
     });
