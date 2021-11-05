@@ -14,7 +14,7 @@ module.exports={
         console.log('\x1b[35m', "[1] - Display node logs");
         console.log('\x1b[35m', "[2] - Clean up node");
         console.log('\x1b[35m', "[3] - Payout a specific job");
-        console.log('\x1b[35m', "[4] - Patially payout all jobs");
+        console.log('\x1b[35m', "[4] - Partially payout all jobs");
         console.log('\x1b[35m', "[0] - Return to main menu",'\n');
 
         const response = await prompts({
