@@ -100,10 +100,6 @@ async function upload(){
         var backup = 'sudo docker exec otnode rm -rf /ot-node/backup'
         exec(backup);
         
-        console.log(date+' - scripts/upload.js: Removing password file of failed upload');
-        var rm_pwd = 'sudo rm -rf /root/restic-password.txt'
-        exec(rm_pwd);
-        
       }else{
         console.log(date+' - scripts/upload.js: AWS upload has successfully triggered.');
         client.sendMessage(chatId, node_name+ ' Restic backup to AWS S3 SUCCESSFUL: '+stdout, {
@@ -120,6 +116,10 @@ async function upload(){
         exec(backup);
       }
     });
+    
+    console.log(date+' - scripts/upload.js: Removing password file of failed upload');
+    var rm_pwd = 'sudo rm -rf /root/restic-password.txt'
+    exec(rm_pwd);
     
   }catch(e){
     client.sendMessage(chatId, node_name+ ' AWS upload failed: '+e, {
