@@ -131,6 +131,10 @@ async function upload(){
     });
     
   }catch(e){
+    console.log(date+' - scripts/upload.js: Removing empty backup folder');
+    var del_bu = 'sudo rm -rf /root/restic-backup/backup 2>&1'
+    await exec(del_bu);
+    
     client.sendMessage(chatId, node_name+ ' AWS upload failed: '+e, {
 
     });
