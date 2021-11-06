@@ -120,7 +120,11 @@ async function upload(){
     var asas = 'sudo ls /root/restic-backup/backup/*/'
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
-
+  
+    console.log(date+' - scripts/upload.js: Moving backup data to backup folder');
+    var mv_data = 'sudo mv /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
+    await exec(mv_data);
+    
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
     var hid_data = 'sudo cp -r /root/restic-backup/backup/202*/.origintrail_noderc /root/restic-backup/ 2>&1'
     await exec(hid_data);
