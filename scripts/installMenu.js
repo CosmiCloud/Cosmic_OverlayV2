@@ -10,14 +10,16 @@ const overlay_config = require('../configurations/overlay_config.json');
 const node_config = require('../configurations/node_config.json');
 const prompts = require('prompts');
 const s3_url_of_backup = overlay_config.scripts.s3_url_of_backup;
+const aws_bucket_name = overlay_config.scripts.aws_bucket_name;
 
 module.exports={
     install_menu: async function menu(){
       try {
         console.log('\x1b[35m',"[1] - Install a new node");
-        console.log('\x1b[35m',"[2] - Restore a node directly from AWS bucket: ");
+        console.log('\x1b[35m',"[2] - Restore with standard backup from AWS bucket: ");
         console.log('\x1b[32m',"      "+s3_url_of_backup);
         console.log('\x1b[35m',"[3] - Restore a node from local backup from /root/OTBackup");
+        console.log('\x1b[35m',"[4] - Restore with restic backup from AWS bucket: \x1b[32m"+aws_bucket_name);
         console.log('\x1b[35m',"[0] - Return to main menu",'\n');
 
             const response = await prompts({
@@ -34,6 +36,9 @@ module.exports={
 
             }else if(response.response == '3'){
               module.exports.restore_local();
+
+            }else if(response.response == '4'){
+              module.exports.restore_restic();
 
             }else if(response.response == '0'){
               const overlay = require('../start_overlay.js');
@@ -92,7 +97,7 @@ module.exports={
          await aws.s3download();
 
          (async () => {
-           console.log('\x1b[33m',"You are about to restore a node directly from your aws bucket: "+s3_url_of_backup+' on '+overlay_config.environment,'\n');
+           console.log('\x1b[33m',"You are about to full restore a node directly from: "+s3_url_of_backup+' on '+overlay_config.environment,'\n');
            const response = await prompts({
              type: 'text',
              name: 'response',
@@ -144,6 +149,38 @@ module.exports={
        }
     }catch(e){
       console.log('\x1b[31m Something broke in the local node restore menu: '+ e,'\n');
+    }
+  },
+  restore_restic: async function option_4(){
+    try{
+      const otexist = await prechecks.otexist();
+      if(otexists == 'yes'){
+         console.log('\x1b[33m',"otnode already exists!");
+       }else{
+         await aws.awscli();
+
+         (async () => {
+           console.log('\x1b[33m',"You are about to restic restore a node directly from aws bucket: "+aws_bucket_name+' on '+overlay_config.environment,'\n');
+           const response = await prompts({
+             type: 'text',
+             name: 'response',
+             message: '\x1b[35mAre you ready? (y/n)?'
+           });
+
+           if(response.response == 'y' || response.response == 'yes'){
+             await machine.firewall();
+             await node_configure.createconfigs();
+             await restore.restic_restore();
+
+           }else{
+             console.log('\x1b[31m',"Exited Install Menu.");
+             const overlay = require('../start_overlay.js');
+             overlay.menu();
+           }
+         })();
+       }
+    }catch(e){
+      console.log('\x1b[31m Something broke in the node restore menu: '+ e,'\n');
     }
   }
 }

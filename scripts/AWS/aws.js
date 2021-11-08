@@ -1,4 +1,5 @@
 const util = require('util');
+const fs = require('fs');
 const exec = util.promisify(require('child_process').exec);
 const prompts = require('prompts');
 const config = require('../../configurations/overlay_config.json');
@@ -72,6 +73,10 @@ module.exports = {
   awscli : async function aws() {
     //check for aws cliversion
     try{
+      var dir = "/root/aws"
+      if(fs.existsSync(dir)){
+        console.log('\x1b[35mAWS folder already exists in root, assumng aws cli v2 is  installed and configured.')
+      }else{
         console.log('\x1b[33m',"AWS cli v2 is required to restore a node directly from AWS.");
         console.log('\x1b[35m',"Please fill out the appropriate information in the overlay_config.json and the overlay will do the rest!");
         console.log(" ");
@@ -119,6 +124,7 @@ module.exports = {
 				  console.log('\x1b[31m',"Exited Install Menu.");
           overlay.menu();
         }
+      }
     }catch(e){
       console.log('\x1b[31m',e);
       return;

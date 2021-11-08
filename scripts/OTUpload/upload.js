@@ -29,13 +29,9 @@ client.getWebhookInfo().catch((error) => {
 
 async function upload(){
   try{
-    console.log(date+' - scripts/upload.js: Declaring upload variables');
-    process.env.AWS_ACCESS_KEY_ID = awsaccesskeyid
-    process.env.AWS_SECRET_ACCESS_KEY = awssecretaccesskey
-
     var dir = "/root/aws"
     if(fs.existsSync(dir)){
-      console.log('AWS folder already exists in root, assumng aws cli v2 is  installed and configured.')
+      console.log('AWS folder already exists in root, assuming aws cli v2 is installed and configured.')
     }else{
       console.log('\x1b[35m',"Downloading aws cli v2...");
       awsdl = 'sudo curl --silent "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /root/awscliv2.zip'
@@ -54,7 +50,7 @@ async function upload(){
       await exec(rmawsz);
 
       console.log('\x1b[35m',"Installing aws cli v2...");
-      installaws = '/root/aws/install --update'
+      installaws = 'sudo /root/aws/install --update'
       await exec(installaws);
       console.log('\x1b[32m',"AWS cli v2 installed",'\n');
 
@@ -80,8 +76,14 @@ async function upload(){
       await exec(restic);
 
       console.log(date+' - scripts/upload.js: Writing password file in root');
-      var data = fs.writeFileSync('/root/restic-password.txt', restic_password)
-      await exec(restic);
+      //var restic_password = restic_password+''
+      await fs.writeFile('/root/restic-password.txt', restic_password, err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        //file written successfully
+      })
 
     }else{
       console.log(date+' - scripts/upload.js: Creating /root/restic-backup');
@@ -120,11 +122,11 @@ async function upload(){
     var asas = 'sudo ls /root/restic-backup/backup/*/'
     asas = await exec(asas);
     console.log(date+' - '+asas.stdout);
-  
+
     console.log(date+' - scripts/upload.js: Moving backup data to backup folder');
     var mv_data = 'sudo mv /root/restic-backup/backup/202*/* /root/restic-backup/ 2>&1'
     await exec(mv_data);
-    
+
     console.log(date+' - scripts/upload.js: Moving hidden data to backup folder');
     var hid_data = 'sudo cp -r /root/restic-backup/backup/202*/.origintrail_noderc /root/restic-backup/ 2>&1'
     await exec(hid_data);
