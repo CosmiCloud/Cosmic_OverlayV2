@@ -111,12 +111,23 @@ module.exports={
 
   stop_scripts: async function option_2(){
     try{
-      var stop = 'cd ./cron-jobs-node && sudo forever stop notification.js && sudo forever stop archive.js && sudo forever stop awsbackup.js && sudo forever stop ping.js && sudo forever stop report.js && sudo forever stop awsjob.js && sudo rm -rf /root/.forever/'
-      console.log('\x1b[35m',"Stopping scripts...");
-      await exec(stop);
-      console.log('\x1b[32m',"Scripts have stopped!");
-      module.exports.scripts_menu();
+      var script_check = "sudo forever list"
+      var scripts_status = await exec(script_check);
+      var scripts_status = scripts_status.stdout
 
+      var n = scripts_status.includes("notification")
+      var n = n.toString();
+
+      if (n == 'true'){
+        var stop = 'cd ./cron-jobs-node && sudo forever stop notification.js && sudo forever stop archive.js && sudo forever stop awsbackup.js && sudo forever stop ping.js && sudo forever stop report.js && sudo forever stop awsjob.js && sudo rm -rf /root/.forever/'
+        console.log('\x1b[35m',"Stopping scripts...");
+        await exec(stop);
+        console.log('\x1b[32m',"Scripts have stopped!");
+        module.exports.scripts_menu();
+      }else{
+        console.log("\x1b[33mScripts are already deacivated!");
+        module.exports.scripts_menu();
+      }
     }catch(e){
       console.log('\x1b[31m',e);
     }
@@ -124,13 +135,24 @@ module.exports={
 
   restart_scripts: async function option_3(){
     try{
-      var restart = 'cd ./cron-jobs-node && sudo forever restart notification.js && sudo forever restart archive.js && sudo forever restart awsbackup.js && sudo forever restart ping.js && sudo forever restart report.js'
-      console.log('\x1b[35m',"Restarting scripts...");
-      await exec(restart);
-      console.log('\x1b[32m',"Scripts have restarted!");
+      var script_check = "sudo forever list"
+      var scripts_status = await exec(script_check);
+      var scripts_status = scripts_status.stdout
 
-      module.exports.scripts_menu();
+      var n = scripts_status.includes("notification")
+      var n = n.toString();
 
+      if (n == 'true'){
+        var restart = 'cd ./cron-jobs-node && sudo forever restart notification.js && sudo forever restart archive.js && sudo forever restart awsbackup.js && sudo forever restart ping.js && sudo forever restart report.js'
+        console.log('\x1b[35m',"Restarting scripts...");
+        await exec(restart);
+        console.log('\x1b[32m',"Scripts have restarted!");
+
+        module.exports.scripts_menu();
+      }else{
+        console.log("\x1b[33mThere are no activated scripts to restart!");
+        module.exports.scripts_menu();
+      }
     }catch(e){
       console.log('\x1b[31m',e);
     }
