@@ -82,11 +82,11 @@ async function ping(){
          }
        }else{
          if(cpuusage > 80){
-           console.log(date+' - scripts/ping.js: CPU usage is high:'+cpuusage+'%');
-           await client.sendMessage(chatId, node_name+ ' CPU usage is '+ cpuusage+'%', {
-             disableWebPagePreview: true,
-             disableNotification: false,
-           });
+           //console.log(date+' - scripts/ping.js: CPU usage is high:'+cpuusage+'%');
+           //await client.sendMessage(chatId, node_name+ ' CPU usage is '+ cpuusage+'%', {
+             //disableWebPagePreview: true,
+             //disableNotification: false,
+           //});
          }
        }
     }else if(running == 'false'){
