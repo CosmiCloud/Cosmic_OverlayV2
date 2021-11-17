@@ -113,7 +113,7 @@
         "heartbeat":{
           "enabled" : "true",
           "telegram_bot_token" : "*telegram bot token here*",
-          "frequency" : "* * * * *"
+          "frequency" : "*/30 * * * *"
         },
         "report":{
           "enabled" : "true",
