@@ -101,7 +101,7 @@
           }
         },
         "log_archiving":{
-          "enabled" : "true",
+          "enabled" : "false",
           "telegram_bot_token" : "*telegram bot token here*",
           "frequency" : "0 0 1 * *"
         },
